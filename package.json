@@ -1,0 +1,15 @@
+{
+  "name": "starxy-skills",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Agent Skills repository compatible with npx skills.",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check-skills.mjs",
+    "skills:init": "npx --yes skills@latest init",
+    "skills:list": "npx --yes skills@latest add . --list"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

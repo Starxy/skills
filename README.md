@@ -1,0 +1,82 @@
+# Skills
+
+This repository stores Agent Skills that can be discovered and installed with
+`npx skills`.
+
+## Skills Catalog
+
+| Skill | Path | Source | Description |
+| --- | --- | --- | --- |
+| `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
+| `ultragoal` | `skills/ultragoal/` | [`jxnl/dots/agents/skills/ultragoal`](https://github.com/jxnl/dots/tree/master/agents/skills/ultragoal) | Design, critique, set, create, activate, or run durable Codex goals for persistent or long-running objectives. |
+
+## Repository Layout
+
+```text
+skills/
+  <skill-name>/
+    SKILL.md
+    scripts/
+    references/
+    assets/
+```
+
+Each skill is a directory with a required `SKILL.md` file. Optional
+`scripts/`, `references/`, and `assets/` directories live inside that skill
+directory when the skill needs deterministic helpers, deferred reference
+material, or reusable output assets.
+
+The `npx skills` CLI also supports catalog layouts such as:
+
+```text
+skills/
+  <category>/
+    <skill-name>/
+      SKILL.md
+```
+
+## Create a Skill
+
+```bash
+npx skills init skills/my-skill
+```
+
+Then edit `skills/my-skill/SKILL.md`. Required frontmatter:
+
+```markdown
+---
+name: my-skill
+description: Use when the agent needs to ...
+---
+```
+
+Use lowercase letters, digits, and hyphens for skill names, and keep the folder
+name the same as the `name` field.
+
+## Validate
+
+```bash
+npm run check
+npx skills add . --list
+```
+
+`npm run check` validates the repository's skill files without requiring any
+published package metadata. `npx skills add . --list` verifies discovery through
+the real CLI after at least one skill exists.
+
+## Install From This Repository
+
+From a local checkout:
+
+```bash
+npx skills add . --skill my-skill --agent codex
+```
+
+After publishing to GitHub:
+
+```bash
+npx skills add owner/repo --skill my-skill --agent codex
+```
+
+Use `--copy` if symlinks are not desirable on the target machine. Use
+`--skill '*' --agent '*' -y` to install every skill for every detected agent.
