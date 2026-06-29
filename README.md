@@ -3,6 +3,12 @@
 This repository stores Agent Skills that can be discovered and installed with
 `npx skills`.
 
+## Install
+
+```bash
+npx skills add Starxy/skills
+```
+
 ## Skills Catalog
 
 | Skill | Path | Source | Description |
@@ -66,16 +72,23 @@ the real CLI after at least one skill exists.
 
 ## Install From This Repository
 
+From GitHub, install a specific skill by name:
+
+```bash
+npx skills add Starxy/skills --skill ultragoal --agent codex
+```
+
+Replace `ultragoal` with another skill name from the catalog when needed. To
+install every skill from this repository for Codex:
+
+```bash
+npx skills add Starxy/skills --skill '*' --agent codex -y
+```
+
 From a local checkout:
 
 ```bash
-npx skills add . --skill my-skill --agent codex
-```
-
-After publishing to GitHub:
-
-```bash
-npx skills add owner/repo --skill my-skill --agent codex
+npx skills add . --skill ultragoal --agent codex
 ```
 
 Use `--copy` if symlinks are not desirable on the target machine. Use
