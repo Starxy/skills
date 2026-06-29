@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Sourced Skills"
+  short_description: "Update copied skills from their recorded upstream sources."
+  default_prompt: "Use $sync-sourced-skills to update copied skills in this repository from their recorded sources."
