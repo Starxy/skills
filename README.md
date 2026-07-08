@@ -16,6 +16,7 @@ npx skills add Starxy/skills
 | `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
 | `paper-reading-zh` | `skills/paper-reading-zh/` | [`MrGeDiao/paper-reading-zh/paper-reading-zh`](https://github.com/MrGeDiao/paper-reading-zh/tree/main/paper-reading-zh) | Chinese paper deep-reading workflow for papers, implementations, reproductions, surveys, comparisons, figures, tables, formulas, and experiments. |
 | `ultragoal` | `skills/ultragoal/` | [`jxnl/dots/agents/skills/ultragoal`](https://github.com/jxnl/dots/tree/master/agents/skills/ultragoal) | Design, critique, set, create, activate, or run durable Codex goals for persistent or long-running objectives. |
+| `zotero-library` | `skills/zotero-library/` | Local | Automate Zotero user or group library CRUD, collection maintenance, tags, and sync workflows with pyzotero. |
 
 ## Repository Layout
 

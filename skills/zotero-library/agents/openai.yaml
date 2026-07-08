@@ -1,0 +1,4 @@
+interface:
+  display_name: "Zotero Library"
+  short_description: "Automate Zotero library CRUD with pyzotero."
+  default_prompt: "Use $zotero-library to query and update my Zotero literature library with pyzotero."
