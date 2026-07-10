@@ -91,6 +91,8 @@ Before completion, record in `.codex/paper-pass/result.md`:
 
 Completion evidence is now recorded in `.codex/paper-pass/result.md`. Final focused whole-change review returned Ready to merge **Yes** with no finding. The only nonzero supporting check is the explicitly permitted upstream `quick_validate.py` schema incompatibility with the required `disable-model-invocation` field; repository validation, CLI discovery, direct contract audit, behavioral matrix, and Git checks pass.
 
+Completion proof was committed as `94ad59618c9c56a22d2817b18e218ca09093eed7`, then verified from the committed state: five repository skills, CLI discovery containing `paper-pass`, direct runtime contract checks, whitespace checks, and clean worktree all passed. No required work remains.
+
 ## Companion Plan
 
 - Durable phase plan: `C:\Project\Starxy\skills\.codex\paper-pass\plan.md`

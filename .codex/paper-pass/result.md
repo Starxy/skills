@@ -7,6 +7,8 @@ Workspace: `C:\Project\Starxy\skills`
 Branch: `main` (explicitly authorized by the user)
 Final runtime and behavioral-evidence commit: `8fc384641a68c05c2d9292fc5f140ff91bd1b720`
 
+Completion-proof commit: `94ad59618c9c56a22d2817b18e218ca09093eed7`
+
 ## Delivered files
 
 Runtime inventory is exactly:
@@ -163,4 +165,6 @@ Dispositions:
 - Approved behavioral matrix complete with raw failures and reruns preserved.
 - No unresolved actionable review finding.
 - No push, publication, pull request, destructive Git action, or unapproved branch was created.
-- The completion proof and durable plan are committed in the commit containing this file; a fresh post-commit verification is required before the active goal is marked complete.
+- The completion proof and durable plan were committed as `94ad59618c9c56a22d2817b18e218ca09093eed7`.
+- Fresh post-proof verification at that commit passed: repository validation found five skills; CLI discovery found `paper-pass`; direct runtime contract assertions passed; `git diff --check` passed; worktree status was clean. The quick validator reproduced only the documented explicit-invocation schema incompatibility.
+- The final state-closing commit contains only durable goal/result/plan updates after this proof; runtime and behavioral evidence remain at the verified commits above.

@@ -147,11 +147,11 @@ Evidence
 - `final-adam.md`: unchanged Task 4 prompt PASS; summary/body = 196/1,614 Han, all shown optimizer parameters are defined, and two figures are selected.
 - `final-title-only.md`: exact original Task 4 prompt PASS; summary/body = 189/1,648 Han, official main/supplement recovery succeeds, every residual-formula symbol is defined, and two figures are selected.
 
-Next action: commit the completion proof, run fresh post-commit verification, then close the active goal.
+Next action: mark the active goal complete and report the delivered skill.
 
 ## Phase 5: Final verification and review
 
-Status: in progress (completion proof authored; post-commit verification pending)
+Status: complete
 
 Implementation
 
@@ -168,7 +168,7 @@ Verification
 
 Exit criteria
 
-- [x] Completion proof is recorded; run fresh post-commit verification, then mark the active goal complete.
+- [x] Completion proof is recorded and fresh post-commit verification passed; the active goal can be marked complete.
 
 Evidence
 
@@ -179,3 +179,5 @@ Evidence
 - Upstream quick validator: exit 1 only for the required `disable-model-invocation` extension.
 - Final independent review: Ready to merge **Yes**, no Critical, Important, or Minor finding.
 - Completion proof: `.codex/paper-pass/result.md`.
+- Completion-proof commit: `94ad59618c9c56a22d2817b18e218ca09093eed7`.
+- Post-proof verification at `94ad596`: `npm run check` exit 0 with five skills; CLI exit 0 with `paper-pass`; direct contract audit exit 0; `git diff --check` exit 0; clean worktree; quick validator exit 1 only for the documented required extension.
