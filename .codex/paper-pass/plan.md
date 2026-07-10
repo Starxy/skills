@@ -97,37 +97,40 @@ Next action: run theory, multiple-paper, and title-only recovery variations.
 
 ## Phase 4: REFACTOR variations
 
-Status: in progress
+Status: complete
 
 Implementation
 
 - [x] Run theory, multiple-paper, and title-only recovery variations.
 - [x] Classify observed failures by condition and output shape.
-- [ ] Make one evidence-driven wording change per failure class.
-- [ ] Re-run failed and affected core scenarios.
+- [x] Make one evidence-driven wording change per failure class.
+- [x] Re-run failed and affected core scenarios.
 
 Verification
 
 - [x] Theory output applies formula restraint and explains shown uncommon symbols.
-- [ ] Multiple-paper input stops and requests one selection.
+- [x] Multiple-paper input stops and requests one selection.
 - [x] Title-only input obtains and identifies readable full text before interpretation.
-- [ ] Normal outputs use exactly the four approved paper-information fields.
+- [x] Normal outputs use exactly the four approved paper-information fields.
 
 Exit criteria
 
-- [ ] All variation and regression tests pass with raw evidence preserved.
+- [x] All variation and regression tests pass with raw evidence preserved.
 
 Evidence
 
 - `variation-theory.md`: formula behavior PASS; output shape FAIL because an unapproved `作者` field is added.
 - `variation-title-only.md`: official full text and supplement recovery PASS; output shape FAIL because the same extra `作者` field is added.
 - `variation-multiple.md`: single-paper gate, stop output, and scope restraint FAIL because both papers are read and synthesized.
+- Commit `e194d09 fix: enforce paper-pass single-paper gate` changes only the existing multi-paper precondition; task review found no specification issue. `variation-multiple-rerun.md` stops before retrieval, lists only the titles, and requests exactly one selection.
+- Commit `e95babf fix: lock paper-pass metadata shape` adds one co-located closed-field recipe; task review found no issue. `variation-theory-rerun.md` and `variation-title-only-rerun.md` contain exactly four metadata fields and preserve all previously passing behavior.
+- Measured rerun lengths: Adam summary/body = 177/1,937 Han characters; ResNet summary/body = 171/1,733 Han characters. Adam explains every shown uncommon parameter; ResNet shows only the indispensable residual relation and explains `x`, `H(x)`, and `F(x)`.
 
-Next action: commit raw variation evidence; first harden the observable multiple-paper stop branch and rerun it, then enforce an exactly-four-field metadata recipe and rerun both affected normal-output scenarios.
+Next action: run the complete static/CLI verification matrix, request an independent whole-change review, resolve findings, and write the completion proof.
 
 ## Phase 5: Final verification and review
 
-Status: pending
+Status: in progress
 
 Implementation
 
