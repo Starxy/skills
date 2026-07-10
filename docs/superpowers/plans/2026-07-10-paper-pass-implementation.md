@@ -94,7 +94,6 @@ git commit -m "test: capture paper-pass baseline behavior"
 - Create: `skills/paper-pass/references/paper-types.md`
 - Create: `skills/paper-pass/agents/openai.yaml`
 - Modify: `README.md`
-- Modify: `.codex/paper-pass/plan.md`
 
 **Interfaces:**
 - Consumes: exact RED failure evidence from Task 1 and the approved specification.
@@ -202,7 +201,7 @@ Expected: repository validator reports five valid skills; quick validator report
 - [ ] **Step 8: Commit the minimal skill**
 
 ```powershell
-git add skills/paper-pass README.md .codex/paper-pass/plan.md
+git add skills/paper-pass README.md
 git commit -m "feat: add paper-pass skill"
 ```
 

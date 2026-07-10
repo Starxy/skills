@@ -60,7 +60,7 @@ The verifier fails if prompts are weakened, expected answers are leaked, the ski
 
 ## Approval Gates
 
-- Ask before creating an isolated worktree if the workspace is not already isolated.
+- Workspace choice resolved on 2026-07-10: the user authorized implementation directly on `main`; do not create an isolated worktree for this goal.
 - Ask before pushing, publishing, opening a pull request, or making any destructive git change.
 - No external account, permission, purchase, or public action is required for this goal.
 

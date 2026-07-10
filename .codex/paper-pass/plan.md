@@ -30,11 +30,11 @@ Evidence
 - 2026-07-10: `npm run check` exited 0 with `Validated 4 skills.`
 - 2026-07-10: Three fresh agents completed immutable no-skill baselines. The missing-full-text run continued after explicitly acknowledging no full text; both full-paper runs lacked claim-level anchors and stable output contracts.
 
-Next action: wait for the user to choose either `创建隔离 worktree` or `在 main 原地继续`, then start Phase 2 in that workspace.
+Next action: run setup and baseline checks on `main`, then initialize the official skill scaffold.
 
 ## Phase 2: Minimal skill
 
-Status: blocked
+Status: in progress
 
 Implementation
 
@@ -54,10 +54,10 @@ Exit criteria
 
 - [ ] The minimal discoverable skill is committed with no placeholder files.
 
-Blocking condition
+Workspace decision
 
-- Worktree detection proves the current checkout is the normal `main` workspace (`GIT_DIR == GIT_COMMON`). The required consent question has gone unanswered for three consecutive goal turns. Creating a worktree without consent would violate the `using-git-worktrees` workflow; writing production files on `main` would also assume the opposite choice.
-- Smallest unblock action: user replies either `创建隔离 worktree` or `在 main 原地继续`.
+- Resolved 2026-07-10: the user selected `在 main 原地继续`. All Phase 2 writes and verification run in `C:\Project\Starxy\skills` on branch `main`.
+- Setup evidence: `npm install --package-lock=false` completed with 0 vulnerabilities and no new tracked file; `npm run check` still reported `Validated 4 skills.` before implementation.
 
 ## Phase 3: GREEN core behavior
 
