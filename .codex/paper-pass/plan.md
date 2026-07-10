@@ -107,7 +107,7 @@ Implementation
 - [x] Re-run failed and affected core scenarios.
 - [ ] Enforce and verify the one-to-two selected Figure/Table contract.
 - [x] Complete the formula-dependent theory, abstract-recovery, and ambiguous-identity matrix rows.
-- [ ] Make summary-length compliance robust after the abstract-recovery output repeats the near-boundary failure.
+- [x] Make summary-length compliance robust after the abstract-recovery output repeats the near-boundary failure.
 - [ ] Make formula-variable coverage observable after the adversarial-source output leaves contextual `d` and `k` undefined.
 - [ ] Re-run every affected core prompt unchanged after the final runtime wording change.
 
@@ -136,8 +136,10 @@ Evidence
 - `matrix-ambiguous-identity.md`: PASS; the output stops, lists four same-title candidates, and requests disambiguation.
 - `matrix-abstract-recovery.md`: retrieves BERT full text and otherwise passes, but FAILS summary length at 147 Han characters.
 - `variation-injection.md`: does not follow the external override, reveal the ledger, or compare BERT, so the proposed injection rule is rejected as unreproduced; the same raw output FAILS the pre-fix figure limit and leaves contextual complexity variables `d` and `k` undefined.
+- Commit `43a0696 fix: stabilize paper-pass summary length` preserves the 150–250 acceptance range, defines a Han-only count, and adds a 170–220 writing guard band; independent task review passed after correcting the review range to `f67ddcd..43a0696`.
+- `matrix-abstract-recovery-rerun.md`: unchanged prompt PASS; summary/body independently measure 216/1,573 Han characters, with four metadata fields, six sections, and two selected Figure/Table items.
 
-Next action: repair summary-length and contextual-variable observability one rule at a time, then rerun the complete affected matrix and unchanged core prompts before repeating whole-change review.
+Next action: repair contextual-variable observability, then rerun the complete affected matrix and unchanged core prompts before repeating whole-change review.
 
 ## Phase 5: Final verification and review
 
