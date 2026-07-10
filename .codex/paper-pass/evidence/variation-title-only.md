@@ -70,6 +70,7 @@ Measured length: core summary 191 visible non-whitespace characters (148 Han cha
 
 | Criterion | Result | Evidence |
 |---|---|---|
+| Summary length | FAIL | The measured 148 Han characters are below the 150-character minimum. |
 | Full-text recovery | PASS | Starting from title only, locates the official CVF paper and the core-dependent supplement, and states the version used. |
 | Six-question comprehension | PASS | All six questions are directly answerable. |
 | Motivation attribution | PASS | Separates direct motivation from reconstruction and labels speculation. |

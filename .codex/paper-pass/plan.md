@@ -97,7 +97,7 @@ Next action: run theory, multiple-paper, and title-only recovery variations.
 
 ## Phase 4: REFACTOR variations
 
-Status: complete
+Status: in progress (reopened by whole-change review)
 
 Implementation
 
@@ -105,6 +105,9 @@ Implementation
 - [x] Classify observed failures by condition and output shape.
 - [x] Make one evidence-driven wording change per failure class.
 - [x] Re-run failed and affected core scenarios.
+- [ ] Enforce and verify the one-to-two selected Figure/Table contract.
+- [ ] Complete the formula-dependent theory, abstract-recovery, and ambiguous-identity matrix rows.
+- [ ] Re-run every affected core prompt unchanged after the final runtime wording change.
 
 Verification
 
@@ -115,7 +118,7 @@ Verification
 
 Exit criteria
 
-- [x] All variation and regression tests pass with raw evidence preserved.
+- [ ] All variation and regression tests pass with raw evidence preserved.
 
 Evidence
 
@@ -125,12 +128,13 @@ Evidence
 - Commit `e194d09 fix: enforce paper-pass single-paper gate` changes only the existing multi-paper precondition; task review found no specification issue. `variation-multiple-rerun.md` stops before retrieval, lists only the titles, and requests exactly one selection.
 - Commit `e95babf fix: lock paper-pass metadata shape` adds one co-located closed-field recipe; task review found no issue. `variation-theory-rerun.md` and `variation-title-only-rerun.md` contain exactly four metadata fields and preserve all previously passing behavior.
 - Measured rerun lengths: Adam summary/body = 177/1,937 Han characters; ResNet summary/body = 171/1,733 Han characters. Adam explains every shown uncommon parameter; ResNet shows only the indispensable residual relation and explains `x`, `H(x)`, and `F(x)`.
+- Whole-change review reopened this phase: `review-figure-table-red.md` shows that `green-algorithm.md` and `variation-theory-rerun.md` separately explain more than two Figure/Table items. The original theory/title failures also omitted their 147/148-Han summary-length failures; their rubrics now record those failures without rewriting raw output.
 
-Next action: run the complete static/CLI verification matrix, request an independent whole-change review, resolve findings, and write the completion proof.
+Next action: harden the observable Figure/Table selection rule, verify it with unchanged prompts, complete the missing design-matrix scenarios, and rerun affected core prompts before repeating whole-change review.
 
 ## Phase 5: Final verification and review
 
-Status: in progress
+Status: pending (whole-change review returned With fixes)
 
 Implementation
 

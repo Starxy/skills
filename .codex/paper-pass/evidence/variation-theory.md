@@ -81,6 +81,7 @@ Measured length: core summary 181 visible non-whitespace characters (147 Han cha
 
 | Criterion | Result | Evidence |
 |---|---|---|
+| Summary length | FAIL | The measured 147 Han characters are below the 150-character minimum. |
 | Full-text gate | PASS | Identifies arXiv v9 and uses the full text. |
 | Six-question comprehension | PASS | Fixed sections cover all six cognitive questions. |
 | Motivation attribution | PASS | Explicitly marks interpretive reconstruction. |

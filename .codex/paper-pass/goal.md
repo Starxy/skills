@@ -13,6 +13,7 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 - Task-scoped independent review found the minimal skill spec-compliant and approved with no Critical, Important, or Minor issue. The upstream quick validator rejects the required `disable-model-invocation` key; repository validation and direct contract checks pass, and the compatibility is preserved rather than weakening explicit-only invocation.
 - GREEN forward tests now pass the algorithm/system, perspective, and missing-full-text scenarios. The original missing-full-text run exposed a partial-section substitution ambiguity; commit `3380402` added one co-located stop-response rule, independent review approved it, and a fresh rerun passed while the failed artifact remained preserved.
 - Initial Phase 4 variations showed two independent failures: theory and title-only outputs added an unapproved `作者` metadata field, while a multiple-paper request bypassed the single-paper gate. The raw failures remain preserved. Commit `e194d09` hardened the pre-retrieval single-paper stop and commit `e95babf` closed the metadata block to exactly four fields; both changes passed task-level independent review and fresh reruns now pass.
+- Whole-change review found that two outputs expanded more than two figures/tables while the rubric omitted that count, and that the approved behavior matrix and post-fix core regression set were incomplete. The same review raised an external-content prompt-injection concern; a current-skill adversarial run is being used to determine whether that concern is reproducible before changing runtime guidance.
 
 ## Constraints
 
@@ -36,6 +37,8 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 Fresh-context behavioral tests must exercise the local skill on the fixed algorithm/system, perspective, missing-full-text, theory, multiple-paper, and title-only recovery scenarios. All shipped behavior must pass the approved rubric: full-text gate, six-question comprehension, motivation attribution, contribution layering, evidence anchors, formula restraint, output shape, paper-type adaptation, and scope restraint.
 
 The verifier fails if prompts are weakened, expected answers are leaked, the skill is omitted from GREEN runs, raw outputs are not preserved, or a behavior passes only by hiding a failure from the evidence record.
+
+The final matrix must also include the approved formula-dependent theory, abstract-to-full-text recovery, and ambiguous-identity scenarios, plus unchanged reruns of every affected core prompt after the final runtime wording change.
 
 ## Supporting Checks
 
