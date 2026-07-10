@@ -12,6 +12,7 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 - Three RED behavioral baselines are committed under `.codex/paper-pass/evidence/`: both full-paper runs lack stable claim-level anchors and output contracts, while the missing-full-text run continued with speculative interpretation after acknowledging that no full text exists.
 - Task-scoped independent review found the minimal skill spec-compliant and approved with no Critical, Important, or Minor issue. The upstream quick validator rejects the required `disable-model-invocation` key; repository validation and direct contract checks pass, and the compatibility is preserved rather than weakening explicit-only invocation.
 - GREEN forward tests now pass the algorithm/system, perspective, and missing-full-text scenarios. The original missing-full-text run exposed a partial-section substitution ambiguity; commit `3380402` added one co-located stop-response rule, independent review approved it, and a fresh rerun passed while the failed artifact remained preserved.
+- Initial Phase 4 variations show that theory formula restraint and title-only full-text recovery work, but both outputs add an unapproved `作者` metadata field. The multiple-paper request bypasses the single-paper gate entirely and produces two readings plus synthesis. These raw failures are preserved and require separate one-rule-at-a-time fixes.
 
 ## Constraints
 

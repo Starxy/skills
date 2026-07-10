@@ -101,19 +101,29 @@ Status: in progress
 
 Implementation
 
-- [ ] Run theory, multiple-paper, and title-only recovery variations.
-- [ ] Classify failures and make only evidence-driven wording changes.
+- [x] Run theory, multiple-paper, and title-only recovery variations.
+- [x] Classify observed failures by condition and output shape.
+- [ ] Make one evidence-driven wording change per failure class.
 - [ ] Re-run failed and affected core scenarios.
 
 Verification
 
-- [ ] Theory output applies formula restraint and explains shown uncommon symbols.
+- [x] Theory output applies formula restraint and explains shown uncommon symbols.
 - [ ] Multiple-paper input stops and requests one selection.
-- [ ] Title-only input obtains and identifies readable full text before interpretation.
+- [x] Title-only input obtains and identifies readable full text before interpretation.
+- [ ] Normal outputs use exactly the four approved paper-information fields.
 
 Exit criteria
 
 - [ ] All variation and regression tests pass with raw evidence preserved.
+
+Evidence
+
+- `variation-theory.md`: formula behavior PASS; output shape FAIL because an unapproved `作者` field is added.
+- `variation-title-only.md`: official full text and supplement recovery PASS; output shape FAIL because the same extra `作者` field is added.
+- `variation-multiple.md`: single-paper gate, stop output, and scope restraint FAIL because both papers are read and synthesized.
+
+Next action: commit raw variation evidence; first harden the observable multiple-paper stop branch and rerun it, then enforce an exactly-four-field metadata recipe and rerun both affected normal-output scenarios.
 
 ## Phase 5: Final verification and review
 
