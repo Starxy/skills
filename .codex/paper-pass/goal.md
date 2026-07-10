@@ -11,6 +11,7 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 - `npm run check` passes with `Validated 5 skills.`
 - Three RED behavioral baselines are committed under `.codex/paper-pass/evidence/`: both full-paper runs lack stable claim-level anchors and output contracts, while the missing-full-text run continued with speculative interpretation after acknowledging that no full text exists.
 - Task-scoped independent review found the minimal skill spec-compliant and approved with no Critical, Important, or Minor issue. The upstream quick validator rejects the required `disable-model-invocation` key; repository validation and direct contract checks pass, and the compatibility is preserved rather than weakening explicit-only invocation.
+- Initial GREEN forward tests pass the algorithm/system and perspective scenarios, including fixed structure, lengths, attribution, and anchors. The missing-full-text scenario stops correctly but weakens the hard gate in its final sentence by suggesting that selected partial sections could suffice; this remains an active behavioral failure.
 
 ## Constraints
 

@@ -72,18 +72,26 @@ Status: in progress
 
 Implementation
 
-- [ ] Re-run the three immutable RED prompts with the local skill in fresh contexts.
-- [ ] Preserve and score raw outputs with the same rubric.
-- [ ] Compare RED and GREEN without leaking diagnoses to test agents.
+- [x] Re-run the three immutable RED prompts with the local skill in fresh contexts.
+- [x] Preserve and score raw outputs with the same rubric.
+- [x] Compare RED and GREEN without leaking diagnoses to test agents.
 
 Verification
 
-- [ ] Full-paper scenarios satisfy the six-question, output, evidence, formula, and scope contracts.
+- [x] Full-paper scenarios satisfy the six-question, output, evidence, formula, and scope contracts.
 - [ ] Missing-full-text scenario stops without speculative interpretation.
 
 Exit criteria
 
 - [ ] Every targeted RED failure is corrected without a new regression.
+
+Evidence
+
+- `green-algorithm.md`: PASS on all fixed rubric rows; summary 151 Han characters, body 1,759 Han characters.
+- `green-perspective.md`: PASS on all fixed rubric rows; summary 157 Han characters, body 1,820 Han characters.
+- `green-missing-fulltext.md`: stops and avoids speculation, but FAILS the complete-full-text gate because “至少需要引言、方法、实验、结果与局限性”等措辞 suggests partial sections may substitute for the complete paper.
+
+Next action: commit raw GREEN evidence, add one observable stop-response rule forbidding partial-section substitution, then rerun the missing-full-text regression and affected core checks.
 
 ## Phase 4: REFACTOR variations
 
