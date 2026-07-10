@@ -7,9 +7,10 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 ## Baseline
 
 - The approved design is committed at `docs/superpowers/specs/2026-07-10-paper-pass-design.md`.
-- The repository currently contains four valid skills and no `skills/paper-pass/` directory.
-- `npm run check` passes with `Validated 4 skills.`
+- The repository now contains the committed minimal `skills/paper-pass/` runtime at `38dfb23 feat: add paper-pass skill`.
+- `npm run check` passes with `Validated 5 skills.`
 - Three RED behavioral baselines are committed under `.codex/paper-pass/evidence/`: both full-paper runs lack stable claim-level anchors and output contracts, while the missing-full-text run continued with speculative interpretation after acknowledging that no full text exists.
+- Task-scoped independent review found the minimal skill spec-compliant and approved with no Critical, Important, or Minor issue. The upstream quick validator rejects the required `disable-model-invocation` key; repository validation and direct contract checks pass, and the compatibility is preserved rather than weakening explicit-only invocation.
 
 ## Constraints
 

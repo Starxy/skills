@@ -34,34 +34,41 @@ Next action: run setup and baseline checks on `main`, then initialize the offici
 
 ## Phase 2: Minimal skill
 
-Status: in progress
+Status: complete
 
 Implementation
 
 - [x] Read `openai_yaml.md` and verify the scaffold, generator, and validator prerequisites.
-- [ ] Initialize `paper-pass` with the official scaffold in the selected workspace.
-- [ ] Author the minimal `SKILL.md` from observed RED failures and approved invariants.
-- [ ] Author the five paper-type evidence lenses.
-- [ ] Generate `agents/openai.yaml` and update the root catalog.
+- [x] Initialize `paper-pass` with the official scaffold in the selected workspace.
+- [x] Author the minimal `SKILL.md` from observed RED failures and approved invariants.
+- [x] Author the five paper-type evidence lenses.
+- [x] Generate `agents/openai.yaml` and update the root catalog.
 
 Verification
 
-- [ ] Repository validation reports five valid skills.
-- [ ] Skill-creator validation passes or explicit-invocation compatibility is documented.
-- [ ] `agents/openai.yaml` sets `policy.allow_implicit_invocation: false` in addition to the frontmatter control.
+- [x] Repository validation reports five valid skills.
+- [x] Skill-creator compatibility is documented: its schema rejects only the required `disable-model-invocation` key; the field remains preserved.
+- [x] `agents/openai.yaml` sets `policy.allow_implicit_invocation: false` in addition to the frontmatter control.
 
 Exit criteria
 
-- [ ] The minimal discoverable skill is committed with no placeholder files.
+- [x] The minimal discoverable skill is committed with no placeholder files and passed task-scoped independent review.
 
 Workspace decision
 
 - Resolved 2026-07-10: the user selected `在 main 原地继续`. All Phase 2 writes and verification run in `C:\Project\Starxy\skills` on branch `main`.
 - Setup evidence: `npm install --package-lock=false` completed with 0 vulnerabilities and no new tracked file; `npm run check` still reported `Validated 4 skills.` before implementation.
 
+Evidence
+
+- Commit `38dfb23 feat: add paper-pass skill` contains exactly `README.md` and the three planned runtime files.
+- Fresh controller check: `npm run check` exited 0 with `Validated 5 skills.`; exact runtime file inventory and explicit-invocation fields match the plan.
+- `quick_validate.py` exited 1 only because its allowed-key schema omits `disable-model-invocation`; this anticipated compatibility is recorded in `.superpowers/sdd/task-2-report.md`.
+- Task review: spec PASS, task quality Approved, no findings.
+
 ## Phase 3: GREEN core behavior
 
-Status: pending
+Status: in progress
 
 Implementation
 
