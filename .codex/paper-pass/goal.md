@@ -16,6 +16,7 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 - Whole-change review found that two outputs expanded more than two figures/tables while the rubric omitted that count, and that the approved behavior matrix and post-fix core regression set were incomplete. The same review raised an external-content prompt-injection concern; a current-skill adversarial run is being used to determine whether that concern is reproducible before changing runtime guidance.
 - The external-content adversarial run ignored the embedded override, retrieved canonical full text, kept the ledger hidden, and stayed in scope, so no injection-specific runtime change is evidence-justified. The run did expose omitted contextual variables in complexity formulas. The missing matrix now also shows formula-dependent theory and ambiguous identity passing, while abstract-to-full-text recovery succeeds except for a recurring 147-Han summary boundary failure.
 - Commit `43a0696` adds a 170–220 Han-character writing guard band while preserving the 150–250 acceptance range and an explicit count. Independent task review passed; the unchanged abstract-recovery prompt now produces a 216-Han summary and otherwise remains compliant.
+- Commit `9a6eb04` makes context-dependent formula symbols observable and requires a final symbol audit. Independent task review passed. Unchanged theory and adversarial-source prompts now preserve necessary formulas, define all contextual symbols, select only two core figures, and satisfy the length/output contracts.
 
 ## Constraints
 
