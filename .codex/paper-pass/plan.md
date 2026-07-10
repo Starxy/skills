@@ -68,7 +68,7 @@ Evidence
 
 ## Phase 3: GREEN core behavior
 
-Status: in progress
+Status: complete
 
 Implementation
 
@@ -79,23 +79,25 @@ Implementation
 Verification
 
 - [x] Full-paper scenarios satisfy the six-question, output, evidence, formula, and scope contracts.
-- [ ] Missing-full-text scenario stops without speculative interpretation.
+- [x] Missing-full-text scenario stops without speculative interpretation or a partial-section substitute.
 
 Exit criteria
 
-- [ ] Every targeted RED failure is corrected without a new regression.
+- [x] Every targeted RED failure is corrected without a new regression.
 
 Evidence
 
 - `green-algorithm.md`: PASS on all fixed rubric rows; summary 151 Han characters, body 1,759 Han characters.
 - `green-perspective.md`: PASS on all fixed rubric rows; summary 157 Han characters, body 1,820 Han characters.
 - `green-missing-fulltext.md`: stops and avoids speculation, but FAILS the complete-full-text gate because “至少需要引言、方法、实验、结果与局限性”等措辞 suggests partial sections may substitute for the complete paper.
+- Commit `3380402 fix: preserve paper-pass full-text gate` changed only the co-located missing-full-text response; task review passed with no findings.
+- `green-missing-fulltext-rerun.md`: PASS on all rubric rows and asks only for the complete main paper plus conditionally required supplement.
 
-Next action: commit raw GREEN evidence, add one observable stop-response rule forbidding partial-section substitution, then rerun the missing-full-text regression and affected core checks.
+Next action: run theory, multiple-paper, and title-only recovery variations.
 
 ## Phase 4: REFACTOR variations
 
-Status: pending
+Status: in progress
 
 Implementation
 
