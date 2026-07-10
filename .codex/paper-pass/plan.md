@@ -147,25 +147,35 @@ Evidence
 - `final-adam.md`: unchanged Task 4 prompt PASS; summary/body = 196/1,614 Han, all shown optimizer parameters are defined, and two figures are selected.
 - `final-title-only.md`: exact original Task 4 prompt PASS; summary/body = 189/1,648 Han, official main/supplement recovery succeeds, every residual-formula symbol is defined, and two figures are selected.
 
-Next action: repeat the full static/CLI verification matrix and whole-change independent review, then write the completion proof.
+Next action: commit the completion proof, run fresh post-commit verification, then close the active goal.
 
 ## Phase 5: Final verification and review
 
-Status: in progress
+Status: in progress (completion proof authored; post-commit verification pending)
 
 Implementation
 
-- [ ] Run all static validators and real CLI discovery.
-- [ ] Request independent specification and quality review.
-- [ ] Resolve actionable findings and re-run affected checks.
-- [ ] Record final result evidence.
+- [x] Run all static validators and real CLI discovery.
+- [x] Request independent specification and quality review.
+- [x] Resolve actionable findings and re-run affected checks.
+- [x] Record final result evidence.
 
 Verification
 
-- [ ] All commands in `goal.md` completion proof pass.
-- [ ] Independent review has no unresolved actionable finding.
-- [ ] Required work is committed and the worktree is clean.
+- [x] All commands in `goal.md` completion proof pass, except the documented upstream schema incompatibility explicitly allowed by the goal.
+- [x] Independent review has no unresolved actionable finding.
+- [x] Required runtime and evidence work is committed and the worktree is clean before the completion-proof commit.
 
 Exit criteria
 
-- [ ] Completion proof is recorded and the active goal can be marked complete.
+- [x] Completion proof is recorded; run fresh post-commit verification, then mark the active goal complete.
+
+Evidence
+
+- Final pre-proof HEAD: `8fc384641a68c05c2d9292fc5f140ff91bd1b720`.
+- `npm run check`: exit 0, `Validated 5 skills.`
+- `npx --yes skills@latest add . --list`: exit 0, found five skills including `paper-pass`.
+- Direct contract audit: twelve PASS assertions, exit 0.
+- Upstream quick validator: exit 1 only for the required `disable-model-invocation` extension.
+- Final independent review: Ready to merge **Yes**, no Critical, Important, or Minor finding.
+- Completion proof: `.codex/paper-pass/result.md`.
