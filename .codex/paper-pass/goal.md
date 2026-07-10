@@ -1,0 +1,86 @@
+# Paper Pass Goal
+
+## Outcome
+
+Create and verify a repository-ready, user-invoked `paper-pass` skill that performs a complete first reading of exactly one academic paper and produces the approved concise professional explanation with reliable evidence boundaries.
+
+## Baseline
+
+- The approved design is committed at `docs/superpowers/specs/2026-07-10-paper-pass-design.md`.
+- The repository currently contains four valid skills and no `skills/paper-pass/` directory.
+- `npm run check` passes with `Validated 4 skills.`
+- No RED behavioral baseline has yet been captured.
+
+## Constraints
+
+- Treat the approved design as the product specification.
+- Require readable full text and any core-dependent supplement before interpretation.
+- Keep the hidden FOCUS-style exhaustive evidence ledger and show only the synthesized output.
+- Preserve the exact summary, metadata, six-section, length, evidence, formula, figure, language, and scope contracts.
+- Keep `paper-pass` independent from `paper-reading-zh`.
+- Use `disable-model-invocation: true`; explicit user invocation only.
+- Add no runtime scripts, assets, skill-local README, or unapproved feature branches.
+- Preserve raw RED/GREEN evidence outside the shipped skill.
+
+## Non-goals
+
+- Multi-paper comparison or batch reading.
+- Reproduction, code mapping, engineering integration, full formula derivation, full peer review, translation, or reading recommendations.
+- Publishing, pushing, or opening a pull request without separate user approval.
+
+## Primary Verifier
+
+Fresh-context behavioral tests must exercise the local skill on the fixed algorithm/system, perspective, missing-full-text, theory, multiple-paper, and title-only recovery scenarios. All shipped behavior must pass the approved rubric: full-text gate, six-question comprehension, motivation attribution, contribution layering, evidence anchors, formula restraint, output shape, paper-type adaptation, and scope restraint.
+
+The verifier fails if prompts are weakened, expected answers are leaked, the skill is omitted from GREEN runs, raw outputs are not preserved, or a behavior passes only by hiding a failure from the evidence record.
+
+## Supporting Checks
+
+- `npm run check` reports five valid skills.
+- skill-creator `quick_validate.py` accepts `skills/paper-pass/`, or any incompatibility with the explicit-invocation field is documented without silently dropping the user requirement.
+- `npx --yes skills@latest add . --list` discovers `paper-pass`.
+- `git diff --check` is clean.
+- Independent review finds no unresolved specification or quality defect.
+
+## Iteration Loop
+
+1. Run an unchanged fresh-context scenario and preserve raw output.
+2. Score it against the fixed rubric and quote exact failure evidence.
+3. Change one meaningful skill rule, output slot, or observable branch condition.
+4. Re-run the failed scenario and all affected regressions.
+5. Update `.codex/paper-pass/plan.md` with evidence and the next action.
+
+## Anti-cheating Rules
+
+- Do not weaken prompts, rubrics, length bounds, or the full-text gate.
+- Do not leak baseline diagnoses or expected answers to forward-test agents.
+- Do not replace real paper runs with invented summaries or mocks.
+- Do not delete or rewrite failed evidence to make progress appear clean.
+- Do not mark a phase complete before both implementation and verification exit criteria pass.
+
+## Approval Gates
+
+- Ask before creating an isolated worktree if the workspace is not already isolated.
+- Ask before pushing, publishing, opening a pull request, or making any destructive git change.
+- No external account, permission, purchase, or public action is required for this goal.
+
+## Blocker Standard
+
+A blocker is an external condition that prevents meaningful progress after safe alternatives are exhausted, such as inability to access any fresh-agent test surface or a validator incompatibility that makes explicit-only invocation impossible. Difficulty, a failing test, or an uncertain wording choice is not a blocker; record the failure and continue the iteration loop.
+
+## Completion Proof
+
+Before completion, record in `.codex/paper-pass/result.md`:
+
+- final paths and file inventory;
+- RED/GREEN/variation pass-fail table with raw artifact paths;
+- exact validator commands, exit codes, and skill counts;
+- CLI discovery output containing `paper-pass`;
+- independent review findings and dispositions;
+- final commit and clean worktree status.
+
+## Companion Plan
+
+- Durable phase plan: `C:\Project\Starxy\skills\.codex\paper-pass\plan.md`
+- Detailed implementation plan: `C:\Project\Starxy\skills\docs\superpowers\plans\2026-07-10-paper-pass-implementation.md`
+- Approved design: `C:\Project\Starxy\skills\docs\superpowers\specs\2026-07-10-paper-pass-design.md`
