@@ -44,6 +44,7 @@
 - 界面显示名：`论文初读`
 - 仅由用户显式调用，不参与模型自动匹配。
 - 在 frontmatter 中设置 `disable-model-invocation: true`。
+- 在 `agents/openai.yaml` 中设置 `policy.allow_implicit_invocation: false`，确保 Codex 运行时也只允许显式调用。
 - 与 `paper-reading-zh` 完全独立：不调用、不路由、不要求安装，也不以对方作为必需背景。
 - 默认输出中文；用户明确要求时可以切换语言。
 
@@ -81,7 +82,7 @@ skills/paper-pass/
 
 - `SKILL.md`：调用设置、全文门槛、两阶段阅读流程、输出契约、证据规则、异常处理和自检。
 - `references/paper-types.md`：实验研究、算法/系统、理论、定性研究、综述/观点论文的证据镜头。
-- `agents/openai.yaml`：显示名、简短说明和默认显式调用提示。
+- `agents/openai.yaml`：显示名、简短说明、默认显式调用提示和禁止隐式调用的产品策略。
 - 不创建脚本、资产、README 或只服务开发过程的文件。
 
 ## 7. 两阶段阅读流程
@@ -278,7 +279,7 @@ skills/paper-pass/
 
 - 运行 `npm run check`。
 - 使用真实 skills CLI 检查 skill 可发现。
-- 确认 `disable-model-invocation: true`，使其只由用户显式调用。
+- 确认 `disable-model-invocation: true` 与 `policy.allow_implicit_invocation: false` 同时存在，使其只由用户显式调用。
 - 修正前向测试暴露的最小问题并复测。
 
 ## 15. 参考来源

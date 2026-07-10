@@ -30,7 +30,7 @@ Evidence
 - 2026-07-10: `npm run check` exited 0 with `Validated 4 skills.`
 - 2026-07-10: Three fresh agents completed immutable no-skill baselines. The missing-full-text run continued after explicitly acknowledging no full text; both full-paper runs lacked claim-level anchors and stable output contracts.
 
-Next action: commit RED evidence, then request worktree consent before starting Phase 2.
+Next action: obtain worktree consent, then start Phase 2 in the selected workspace.
 
 ## Phase 2: Minimal skill
 
@@ -38,7 +38,8 @@ Status: pending
 
 Implementation
 
-- [ ] Read `openai_yaml.md` and initialize `paper-pass` with the official scaffold.
+- [x] Read `openai_yaml.md` and verify the scaffold, generator, and validator prerequisites.
+- [ ] Initialize `paper-pass` with the official scaffold in the selected workspace.
 - [ ] Author the minimal `SKILL.md` from observed RED failures and approved invariants.
 - [ ] Author the five paper-type evidence lenses.
 - [ ] Generate `agents/openai.yaml` and update the root catalog.
@@ -47,6 +48,7 @@ Verification
 
 - [ ] Repository validation reports five valid skills.
 - [ ] Skill-creator validation passes or explicit-invocation compatibility is documented.
+- [ ] `agents/openai.yaml` sets `policy.allow_implicit_invocation: false` in addition to the frontmatter control.
 
 Exit criteria
 

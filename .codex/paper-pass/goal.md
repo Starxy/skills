@@ -9,7 +9,7 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 - The approved design is committed at `docs/superpowers/specs/2026-07-10-paper-pass-design.md`.
 - The repository currently contains four valid skills and no `skills/paper-pass/` directory.
 - `npm run check` passes with `Validated 4 skills.`
-- No RED behavioral baseline has yet been captured.
+- Three RED behavioral baselines are committed under `.codex/paper-pass/evidence/`: both full-paper runs lack stable claim-level anchors and output contracts, while the missing-full-text run continued with speculative interpretation after acknowledging that no full text exists.
 
 ## Constraints
 
@@ -18,7 +18,7 @@ Create and verify a repository-ready, user-invoked `paper-pass` skill that perfo
 - Keep the hidden FOCUS-style exhaustive evidence ledger and show only the synthesized output.
 - Preserve the exact summary, metadata, six-section, length, evidence, formula, figure, language, and scope contracts.
 - Keep `paper-pass` independent from `paper-reading-zh`.
-- Use `disable-model-invocation: true`; explicit user invocation only.
+- Use both `disable-model-invocation: true` in `SKILL.md` and `policy.allow_implicit_invocation: false` in `agents/openai.yaml`; explicit user invocation only.
 - Add no runtime scripts, assets, skill-local README, or unapproved feature branches.
 - Preserve raw RED/GREEN evidence outside the shipped skill.
 
@@ -37,7 +37,7 @@ The verifier fails if prompts are weakened, expected answers are leaked, the ski
 ## Supporting Checks
 
 - `npm run check` reports five valid skills.
-- skill-creator `quick_validate.py` accepts `skills/paper-pass/`, or any incompatibility with the explicit-invocation field is documented without silently dropping the user requirement.
+- skill-creator `quick_validate.py` accepts `skills/paper-pass/` using an isolated temporary PyYAML dependency, or any validator incompatibility with the explicit-invocation field is documented without silently dropping the user requirement.
 - `npx --yes skills@latest add . --list` discovers `paper-pass`.
 - `git diff --check` is clean.
 - Independent review finds no unresolved specification or quality defect.

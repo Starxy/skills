@@ -12,7 +12,7 @@
 
 - Follow `docs/superpowers/specs/2026-07-10-paper-pass-design.md` as the sole product specification.
 - The skill name is exactly `paper-pass`; the display name is `论文初读`.
-- Set `disable-model-invocation: true`; the skill must run only when explicitly invoked.
+- Set `disable-model-invocation: true` in `SKILL.md` and `policy.allow_implicit_invocation: false` in `agents/openai.yaml`; the skill must run only when explicitly invoked.
 - Process exactly one paper and require readable full text plus any core-dependent supplement before interpretation.
 - Use a hidden FOCUS-style exhaustive evidence ledger with a direct quote and source anchor for every key point; show only the synthesized result.
 - Final output order is a 150–250 Chinese-character core summary, minimal paper metadata, then a complexity-scaled 1000–3000 Chinese-character body with six fixed cognitive sections.
@@ -106,10 +106,11 @@ Read `C:\Users\Galax\.codex\skills\.system\skill-creator\references\openai_yaml.
 
 - [ ] **Step 2: Initialize the skill with the official scaffold**
 
-Run with the workspace Python located through `codex_app__load_workspace_dependencies`, or the system Python if no bundled Python is required:
+Run with the bundled workspace Python located through `codex_app__load_workspace_dependencies`:
 
 ```powershell
-python C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\init_skill.py paper-pass --path C:\Project\Starxy\skills\skills --resources references --interface 'display_name=论文初读' --interface 'short_description=首次完整阅读单篇论文，提炼动机、核心思路、贡献与证据边界' --interface 'default_prompt=请使用 $paper-pass 对这篇单篇论文做首次完整阅读：先确认可读取全文，再给出核心总结和简明专业的长文解析。'
+$repoRoot = (Resolve-Path .).Path
+& 'C:\Users\Galax\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\init_skill.py paper-pass --path (Join-Path $repoRoot 'skills') --resources references --interface 'display_name=论文初读' --interface 'short_description=首次完整阅读单篇论文，提炼动机、核心思路、贡献与证据边界' --interface 'default_prompt=请使用 $paper-pass 对这篇单篇论文做首次完整阅读：先确认可读取全文，再给出核心总结和简明专业的长文解析。'
 ```
 
 Expected: `skills/paper-pass/` contains `SKILL.md`, `agents/openai.yaml`, and `references/`; no example placeholder files remain after authoring.
@@ -163,10 +164,18 @@ Define a selection table followed by five co-located lenses. Every lens must ans
 Run:
 
 ```powershell
-python C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\generate_openai_yaml.py C:\Project\Starxy\skills\skills\paper-pass --interface 'display_name=论文初读' --interface 'short_description=首次完整阅读单篇论文，提炼动机、核心思路、贡献与证据边界' --interface 'default_prompt=请使用 $paper-pass 对这篇单篇论文做首次完整阅读：先确认可读取全文，再给出核心总结和简明专业的长文解析。'
+$skillDir = (Resolve-Path .\skills\paper-pass).Path
+& 'C:\Users\Galax\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\generate_openai_yaml.py $skillDir --interface 'display_name=论文初读' --interface 'short_description=首次完整阅读单篇论文，提炼动机、核心思路、贡献与证据边界' --interface 'default_prompt=请使用 $paper-pass 对这篇单篇论文做首次完整阅读：先确认可读取全文，再给出核心总结和简明专业的长文解析。'
 ```
 
-Expected: generated YAML has exactly the requested interface values and no invented icon or brand color.
+After generation, add this product policy without changing the generated interface values:
+
+```yaml
+policy:
+  allow_implicit_invocation: false
+```
+
+Expected: generated YAML has exactly the requested interface values, the explicit-invocation policy, and no invented icon or brand color.
 
 - [ ] **Step 6: Add the root catalog entry**
 
@@ -180,10 +189,15 @@ Insert this row in alphabetical position in `README.md`:
 
 ```powershell
 npm run check
-python C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\quick_validate.py C:\Project\Starxy\skills\skills\paper-pass
+$py = 'C:\Users\Galax\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+$validateDeps = Join-Path $env:TEMP 'paper-pass-validate-deps'
+& $py -m pip install --disable-pip-version-check --target $validateDeps PyYAML
+$env:PYTHONPATH = $validateDeps
+$skillDir = (Resolve-Path .\skills\paper-pass).Path
+& $py C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\quick_validate.py $skillDir
 ```
 
-Expected: repository validator reports five valid skills; quick validator reports the skill is valid. If the upstream validator rejects `disable-model-invocation`, preserve the user-invoked requirement and document the compatibility result rather than silently deleting the field.
+Expected: repository validator reports five valid skills; quick validator reports the skill is valid. The temporary validation dependency remains outside the repository. If the upstream validator rejects `disable-model-invocation`, preserve the user-invoked requirement and document the compatibility result rather than silently deleting the field.
 
 - [ ] **Step 8: Commit the minimal skill**
 
@@ -206,22 +220,22 @@ git commit -m "feat: add paper-pass skill"
 
 - [ ] **Step 1: Run the same prompts with the local skill**
 
-Dispatch three fresh agents with these complete prompts:
+Resolve the active implementation path once with `(Resolve-Path .\skills\paper-pass).Path`. Dispatch three fresh agents with the following complete prompts, replacing only the path phrase `the resolved local paper-pass path` with that command's exact absolute output:
 
 ```text
-Use $paper-pass at C:\Project\Starxy\skills\skills\paper-pass to complete the following request. Treat the skill as the operating instructions and return only the user-facing result.
+Use $paper-pass at the resolved local paper-pass path to complete the following request. Treat the skill as the operating instructions and return only the user-facing result.
 
 Read “Attention Is All You Need” (arXiv:1706.03762) as if I understand machine learning broadly but am seeing the Transformer line of work for the first time. First give a brief core summary, then explain in Chinese what motivated the paper, what limitation it targeted, how its central idea works, what the real contributions are, and what evidence supports them. Keep the long explanation between 1000 and 3000 Chinese characters and avoid unnecessary formula derivation.
 ```
 
 ```text
-Use $paper-pass at C:\Project\Starxy\skills\skills\paper-pass to complete the following request. Treat the skill as the operating instructions and return only the user-facing result.
+Use $paper-pass at the resolved local paper-pass path to complete the following request. Treat the skill as the operating instructions and return only the user-facing result.
 
 Read “On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?” (FAccT 2021) as my first encounter with this subtopic. First give a brief core summary, then explain in Chinese the authors’ motivation, argument structure, substantive contributions, evidence, and most important boundary. Keep the long explanation between 1000 and 3000 Chinese characters.
 ```
 
 ```text
-Use $paper-pass at C:\Project\Starxy\skills\skills\paper-pass to complete the following request. Treat the skill as the operating instructions and return only the user-facing result.
+Use $paper-pass at the resolved local paper-pass path to complete the following request. Treat the skill as the operating instructions and return only the user-facing result.
 
 I only have the following abstract from an unpublished manuscript titled “Adaptive Salience Routing for Sparse Scientific Models”; there is no PDF, repository, supplement, author page, DOI, or other public text. Use it for a first-pass paper reading: “We introduce adaptive salience routing, report improvements on three internal datasets, and discuss implications for scientific models.”
 ```
@@ -260,7 +274,7 @@ git commit -m "test: verify paper-pass core behavior"
 - [ ] **Step 1: Run the theory variation**
 
 ```text
-Use $paper-pass at C:\Project\Starxy\skills\skills\paper-pass to read “Adam: A Method for Stochastic Optimization” (arXiv:1412.6980) for a reader with broad machine-learning knowledge. Keep formulas out unless the core contribution cannot be explained without them; if a non-common variable or parameter appears, explain it explicitly.
+Use $paper-pass at the exact absolute path returned by `(Resolve-Path .\skills\paper-pass).Path` to read “Adam: A Method for Stochastic Optimization” (arXiv:1412.6980) for a reader with broad machine-learning knowledge. Keep formulas out unless the core contribution cannot be explained without them; if a non-common variable or parameter appears, explain it explicitly.
 ```
 
 Expected: formulas are restrained but all shown non-common symbols are explained; contribution and evidence are not reduced to benchmark scores.
@@ -268,7 +282,7 @@ Expected: formulas are restrained but all shown non-common symbols are explained
 - [ ] **Step 2: Run the multiple-paper boundary variation**
 
 ```text
-Use $paper-pass at C:\Project\Starxy\skills\skills\paper-pass to read both “Attention Is All You Need” and “BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding” in one response.
+Use $paper-pass at the exact absolute path returned by `(Resolve-Path .\skills\paper-pass).Path` to read both “Attention Is All You Need” and “BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding” in one response.
 ```
 
 Expected: no paper reading begins; the response asks the user to choose exactly one paper.
@@ -276,7 +290,7 @@ Expected: no paper reading begins; the response asks the user to choose exactly 
 - [ ] **Step 3: Run the title-only recovery variation**
 
 ```text
-Use $paper-pass at C:\Project\Starxy\skills\skills\paper-pass to read “Deep Residual Learning for Image Recognition”. I am only providing the title.
+Use $paper-pass at the exact absolute path returned by `(Resolve-Path .\skills\paper-pass).Path` to read “Deep Residual Learning for Image Recognition”. I am only providing the title.
 ```
 
 Expected: the agent searches for and verifies a readable full paper before interpreting; the final metadata and claims correspond to the version actually read.
@@ -310,7 +324,11 @@ git commit -m "refactor: harden paper-pass boundaries"
 
 ```powershell
 npm run check
-python C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\quick_validate.py C:\Project\Starxy\skills\skills\paper-pass
+$py = 'C:\Users\Galax\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+$validateDeps = Join-Path $env:TEMP 'paper-pass-validate-deps'
+$env:PYTHONPATH = $validateDeps
+$skillDir = (Resolve-Path .\skills\paper-pass).Path
+& $py C:\Users\Galax\.codex\skills\.system\skill-creator\scripts\quick_validate.py $skillDir
 npx --yes skills@latest add . --list
 git diff --check
 git status --short
@@ -322,10 +340,10 @@ Expected: five skills validate; `paper-pass` appears in CLI discovery; no whites
 
 ```powershell
 rg --files skills/paper-pass
-rg -n "disable-model-invocation|paper-reading-zh|1000|3000|150|250|references/paper-types.md" skills/paper-pass README.md
+rg -n "disable-model-invocation|allow_implicit_invocation|paper-reading-zh|1000|3000|150|250|references/paper-types.md" skills/paper-pass README.md
 ```
 
-Expected: exactly `SKILL.md`, `agents/openai.yaml`, and `references/paper-types.md` are shipped; `disable-model-invocation: true` and all length contracts are present; no runtime dependency on `paper-reading-zh` exists.
+Expected: exactly `SKILL.md`, `agents/openai.yaml`, and `references/paper-types.md` are shipped; both explicit-invocation controls and all length contracts are present; no runtime dependency on `paper-reading-zh` exists.
 
 - [ ] **Step 3: Request an independent code/skill review**
 
