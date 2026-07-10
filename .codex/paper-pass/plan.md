@@ -97,7 +97,7 @@ Next action: run theory, multiple-paper, and title-only recovery variations.
 
 ## Phase 4: REFACTOR variations
 
-Status: in progress (reopened by whole-change review)
+Status: complete
 
 Implementation
 
@@ -105,11 +105,11 @@ Implementation
 - [x] Classify observed failures by condition and output shape.
 - [x] Make one evidence-driven wording change per failure class.
 - [x] Re-run failed and affected core scenarios.
-- [ ] Enforce and verify the one-to-two selected Figure/Table contract.
+- [x] Enforce and verify the one-to-two selected Figure/Table contract.
 - [x] Complete the formula-dependent theory, abstract-recovery, and ambiguous-identity matrix rows.
 - [x] Make summary-length compliance robust after the abstract-recovery output repeats the near-boundary failure.
 - [x] Make formula-variable coverage observable after the adversarial-source output leaves contextual `d` and `k` undefined.
-- [ ] Re-run every affected core prompt unchanged after the final runtime wording change.
+- [x] Re-run every affected core prompt unchanged after the final runtime wording change.
 
 Verification
 
@@ -120,7 +120,7 @@ Verification
 
 Exit criteria
 
-- [ ] All variation and regression tests pass with raw evidence preserved.
+- [x] All variation and regression tests pass with raw evidence preserved.
 
 Evidence
 
@@ -141,12 +141,17 @@ Evidence
 - Commit `9a6eb04 fix: define paper-pass formula symbols` makes even familiar context-dependent letters subject to nearby definition and a final symbol audit; independent task review passed with no findings.
 - `matrix-formula-theory-rerun.md`: unchanged prompt PASS; summary/body measure 197/1,883 Han characters, the indispensable constructive bound remains, all contextual symbols are defined, and exactly two figures are selected.
 - `variation-injection-rerun.md`: unchanged prompt PASS; summary/body measure 202/1,745 Han characters, the malicious external override remains ignored, `n`/`d` are defined, and exactly two figures are selected.
+- `final-core-algorithm.md`: unchanged Task 3 prompt PASS; summary/body = 203/1,868 Han, with Figure 1 and Table 2 selected.
+- `final-core-perspective.md`: unchanged Task 3 prompt PASS; summary/body = 173/1,685 Han, with Figure 1 and Table 1 selected.
+- `final-core-missing-fulltext.md`: unchanged Task 3 prompt PASS; it stops after the documented search and requests only the complete main paper.
+- `final-adam.md`: unchanged Task 4 prompt PASS; summary/body = 196/1,614 Han, all shown optimizer parameters are defined, and two figures are selected.
+- `final-title-only.md`: exact original Task 4 prompt PASS; summary/body = 189/1,648 Han, official main/supplement recovery succeeds, every residual-formula symbol is defined, and two figures are selected.
 
-Next action: rerun the unchanged Task 3 core prompts plus the affected Adam and exact title-only prompts against the final runtime wording, then repeat whole-change review.
+Next action: repeat the full static/CLI verification matrix and whole-change independent review, then write the completion proof.
 
 ## Phase 5: Final verification and review
 
-Status: pending (whole-change review returned With fixes)
+Status: in progress
 
 Implementation
 
