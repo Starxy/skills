@@ -1,0 +1,7 @@
+interface:
+  display_name: "AI 新闻策展"
+  short_description: "走查 FreshRSS AI 文章，评分、核验并生成每日 Top 2 例会讲稿"
+  default_prompt: "请使用 $rss-curate-ai-news 走查最近 24 小时的目标频道，生成双层 AI 例会日报。"
+
+policy:
+  allow_implicit_invocation: false
