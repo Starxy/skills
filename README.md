@@ -16,7 +16,7 @@ npx skills add Starxy/skills
 | `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
 | `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
 | `paper-reading-zh` | `skills/paper-reading-zh/` | [`MrGeDiao/paper-reading-zh/paper-reading-zh`](https://github.com/MrGeDiao/paper-reading-zh/tree/main/paper-reading-zh) | Chinese paper deep-reading workflow for papers, implementations, reproductions, surveys, comparisons, figures, tables, formulas, and experiments. |
-| `rss-curate-ai-news` | `skills/rss-curate-ai-news/` | Local | User-invoked FreshRSS curation for scored AI news audits and daily Top 2 meeting briefings. |
+| `rss-curate-ai-news` | `skills/rss-curate-ai-news/` | Local | User-invoked FreshRSS curation with dynamic source matching, digest expansion, scored AI news audits, and daily Top 2 meeting briefings. |
 | `ultragoal` | `skills/ultragoal/` | [`jxnl/dots/agents/skills/ultragoal`](https://github.com/jxnl/dots/tree/master/agents/skills/ultragoal) | Design, critique, set, create, activate, or run durable Codex goals for persistent or long-running objectives. |
 | `zotero-library` | `skills/zotero-library/` | Local | Automate Zotero user or group library CRUD, collection maintenance, tags, and sync workflows with pyzotero. |
 

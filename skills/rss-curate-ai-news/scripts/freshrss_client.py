@@ -9,18 +9,25 @@ import json
 import os
 import re
 import sys
+import unicodedata
+from hashlib import sha256
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, unquote, urlencode, urlsplit
+from urllib.parse import quote, unquote, urlencode, urlsplit, urlunsplit
 from urllib.request import ProxyHandler, Request, build_opener
 
 
-TARGET_FEEDS = ("机器之心", "新智元", "量子位")
+TODAY_FEED_PATTERN = re.compile(r"(?:-|－)\s*今天看啥$")
+DIGEST_FEED_TITLE = "橘鸦AI早报"
+DIRECT_SOURCE = "direct_article"
+DIGEST_SOURCE = "daily_digest"
 SELECTED_LABEL = "AI例会/已选"
+SELECTED_STORY_PREFIX = "AI例会/已选新闻/"
+STORY_CONCEPT_PREFIX = "AI例会/新闻概念/"
 CONCEPT_PREFIX = "AI概念/"
 SHANGHAI = timezone(timedelta(hours=8), name="Asia/Shanghai")
 EARLIEST_VALID_PUBLICATION = datetime(2000, 1, 1, tzinfo=timezone.utc)
@@ -43,7 +50,9 @@ class _ArticleHTMLParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.parts: list[str] = []
         self.links: list[str] = []
+        self.link_details: list[dict[str, Any]] = []
         self._skip_depth = 0
+        self._active_link: dict[str, Any] | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -58,27 +67,73 @@ class _ArticleHTMLParser(HTMLParser):
             href = dict(attrs).get("href")
             if href and urlsplit(href).scheme in {"http", "https"}:
                 self.links.append(href)
+                self._active_link = {
+                    "url": href,
+                    "text_parts": [],
+                    "context_before": " ".join("".join(self.parts)[-240:].split()),
+                }
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
         if tag in self.SKIP_TAGS and self._skip_depth:
             self._skip_depth -= 1
             return
+        if tag == "a" and self._active_link:
+            detail = {
+                "ordinal": len(self.link_details) + 1,
+                "url": str(self._active_link["url"]),
+                "anchor_text": " ".join("".join(self._active_link["text_parts"]).split()),
+                "context_before": str(self._active_link["context_before"]),
+            }
+            self.link_details.append(detail)
+            self._active_link = None
         if not self._skip_depth and tag in self.BLOCK_TAGS:
             self.parts.append("\n")
 
     def handle_data(self, data: str) -> None:
         if not self._skip_depth:
             self.parts.append(data)
+            if self._active_link:
+                self._active_link["text_parts"].append(data)
 
 
 def html_to_text_and_links(value: str) -> tuple[str, list[str]]:
+    text, links, _ = html_to_text_links_and_details(value)
+    return text, links
+
+
+def html_to_text_links_and_details(value: str) -> tuple[str, list[str], list[dict[str, Any]]]:
     parser = _ArticleHTMLParser()
     parser.feed(value or "")
     lines = [" ".join(line.split()) for line in "".join(parser.parts).splitlines()]
     text = "\n".join(line for line in lines if line)
     links = list(dict.fromkeys(parser.links))
-    return text, links
+    return text, links, parser.link_details
+
+
+def normalize_subscription_title(title: str) -> str:
+    return " ".join(unicodedata.normalize("NFKC", html.unescape(title)).split())
+
+
+def subscription_source_kind(title: str) -> str | None:
+    normalized = normalize_subscription_title(title)
+    if normalized == DIGEST_FEED_TITLE:
+        return DIGEST_SOURCE
+    if TODAY_FEED_PATTERN.search(normalized):
+        return DIRECT_SOURCE
+    return None
+
+
+def _richest_item_content(item: dict[str, Any]) -> tuple[str, str]:
+    candidates: list[tuple[str, str]] = []
+    for key in ("content", "summary"):
+        value = item.get(key) or {}
+        raw = value.get("content", "") if isinstance(value, dict) else str(value)
+        if raw:
+            candidates.append((key, raw))
+    if not candidates:
+        return "unavailable", ""
+    return max(candidates, key=lambda candidate: len(candidate[1]))
 
 
 def _parse_epoch(value: Any, *, milliseconds: bool = False) -> datetime | None:
@@ -132,11 +187,12 @@ def article_from_item(
     now_utc: datetime,
     primary_start: datetime,
     fallback_start: datetime,
+    source_kind: str = DIRECT_SOURCE,
+    feed_id: str | None = None,
 ) -> dict[str, Any]:
     chosen_time, basis = choose_article_time(item, now_utc)
-    summary = item.get("summary") or item.get("content") or {}
-    raw_content = summary.get("content", "") if isinstance(summary, dict) else str(summary)
-    content, embedded_links = html_to_text_and_links(raw_content)
+    content_source, raw_content = _richest_item_content(item)
+    content, embedded_links, link_details = html_to_text_links_and_details(raw_content)
     labels = _extract_labels(item.get("categories") or [])
     crawl_time = _parse_epoch(item.get("crawlTimeMsec"), milliseconds=True)
     article_url = _first_href(item, "canonical") or _first_href(item, "alternate")
@@ -146,6 +202,9 @@ def article_from_item(
         "item_id": str(item.get("id", "")),
         "title": html.unescape(str(item.get("title", "")).strip()),
         "feed": feed_title,
+        "feed_id": feed_id,
+        "source_kind": source_kind,
+        "requires_story_expansion": source_kind == DIGEST_SOURCE,
         "article_url": article_url,
         "published_at": chosen_time.astimezone(SHANGHAI).isoformat() if chosen_time else None,
         "crawl_at": crawl_time.astimezone(SHANGHAI).isoformat() if crawl_time else None,
@@ -156,6 +215,8 @@ def article_from_item(
         "already_selected": SELECTED_LABEL in labels,
         "concept_labels": [label for label in labels if label.startswith(CONCEPT_PREFIX)],
         "embedded_links": embedded_links,
+        "link_occurrences": link_details,
+        "content_source": content_source,
         "content": content,
     }
 
@@ -246,25 +307,93 @@ class FreshRSSClient:
         return self._request(path, params=params, method="POST")
 
 
-def _subscription_map(client: FreshRSSClient) -> dict[str, str]:
+def _target_subscriptions(client: FreshRSSClient) -> list[dict[str, str]]:
     data = client.get_json("/reader/api/0/subscription/list", {"output": "json"})
-    matches: dict[str, list[str]] = {title: [] for title in TARGET_FEEDS}
+    matches: list[dict[str, str]] = []
+    seen_ids: set[str] = set()
     for subscription in data.get("subscriptions") or []:
-        title = str(subscription.get("title", ""))
-        if title in matches:
-            matches[title].append(str(subscription.get("id", "")))
-    missing = [title for title, ids in matches.items() if not ids]
-    duplicates = [title for title, ids in matches.items() if len(ids) > 1]
-    if missing:
-        raise FreshRSSError("Missing target subscriptions: " + ", ".join(missing))
-    if duplicates:
-        raise FreshRSSError("Duplicate target subscription titles: " + ", ".join(duplicates))
-    return {title: ids[0] for title, ids in matches.items()}
+        display_title = html.unescape(str(subscription.get("title", ""))).strip()
+        normalized_title = normalize_subscription_title(display_title)
+        feed_id = str(subscription.get("id", ""))
+        source_kind = subscription_source_kind(normalized_title)
+        if not source_kind or not feed_id or feed_id in seen_ids:
+            continue
+        seen_ids.add(feed_id)
+        matches.append({
+            "title": display_title,
+            "normalized_title": normalized_title,
+            "feed_id": feed_id,
+            "source_kind": source_kind,
+        })
+
+    if not any(match["source_kind"] == DIRECT_SOURCE for match in matches):
+        raise FreshRSSError("No subscriptions end with '-今天看啥' (optional spaces are allowed)")
+    if not any(match["source_kind"] == DIGEST_SOURCE for match in matches):
+        raise FreshRSSError(f"Missing target subscription: {DIGEST_FEED_TITLE}")
+    return sorted(
+        matches,
+        key=lambda match: (
+            match["source_kind"] == DIGEST_SOURCE,
+            match["normalized_title"],
+            match["feed_id"],
+        ),
+    )
 
 
 def _user_labels(client: FreshRSSClient) -> list[str]:
     data = client.get_json("/reader/api/0/tag/list", {"output": "json"})
     return _extract_labels(tag.get("id", "") for tag in data.get("tags") or [])
+
+
+def _selected_story_keys(labels: Iterable[str]) -> list[str]:
+    return sorted({
+        label[len(SELECTED_STORY_PREFIX):]
+        for label in labels
+        if label.startswith(SELECTED_STORY_PREFIX)
+    })
+
+
+def _story_concepts(labels: Iterable[str]) -> dict[str, list[str]]:
+    labels = list(labels)
+    selected_keys = set(_selected_story_keys(labels))
+    result: dict[str, list[str]] = {}
+    for label in labels:
+        if not label.startswith(STORY_CONCEPT_PREFIX):
+            continue
+        remainder = label[len(STORY_CONCEPT_PREFIX):]
+        if "/" not in remainder:
+            continue
+        story_key, concept = remainder.split("/", 1)
+        if story_key in selected_keys and concept:
+            result.setdefault(story_key, []).append(concept)
+    return {key: list(dict.fromkeys(values)) for key, values in sorted(result.items())}
+
+
+def _stream_items(
+    client: FreshRSSClient,
+    path: str,
+    api_fetch_start: datetime,
+) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    continuation: str | None = None
+    seen_continuations: set[str] = set()
+    while True:
+        params: dict[str, Any] = {
+            "output": "json",
+            "n": 1000,
+            "ot": int(api_fetch_start.timestamp()),
+        }
+        if continuation:
+            params["c"] = continuation
+        data = client.get_json(path, params)
+        items.extend(item for item in data.get("items") or [] if isinstance(item, dict))
+        next_continuation = str(data.get("continuation") or "").strip()
+        if not next_continuation:
+            return items
+        if next_continuation in seen_continuations:
+            raise FreshRSSError(f"FreshRSS repeated a continuation token for {path}")
+        seen_continuations.add(next_continuation)
+        continuation = next_continuation
 
 
 def fetch_articles(
@@ -278,36 +407,43 @@ def fetch_articles(
     primary_start = now_utc - timedelta(hours=primary_hours)
     fallback_start = now_utc - timedelta(days=fallback_days)
     api_fetch_start = now_utc - timedelta(days=fallback_days + 1)
-    subscriptions = _subscription_map(client)
+    subscriptions = _target_subscriptions(client)
     user_labels = _user_labels(client)
     articles: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    counts: dict[str, dict[str, int]] = {}
+    counts: list[dict[str, Any]] = []
 
-    for title in TARGET_FEEDS:
-        feed_id = subscriptions[title]
+    for subscription in subscriptions:
+        title = subscription["title"]
+        feed_id = subscription["feed_id"]
+        source_kind = subscription["source_kind"]
         path = "/reader/api/0/stream/contents/" + quote(feed_id, safe="/")
-        data = client.get_json(
-            path,
-            {
-                "output": "json",
-                "n": 1000,
-                "ot": int(api_fetch_start.timestamp()),
-            },
-        )
         feed_articles = []
-        for item in data.get("items") or []:
-            article = article_from_item(item, title, now_utc, primary_start, fallback_start)
-            if not article["item_id"] or article["item_id"] in seen:
+        seen_in_feed: set[str] = set()
+        for item in _stream_items(client, path, api_fetch_start):
+            article = article_from_item(
+                item,
+                title,
+                now_utc,
+                primary_start,
+                fallback_start,
+                source_kind=source_kind,
+                feed_id=feed_id,
+            )
+            if not article["item_id"] or article["item_id"] in seen_in_feed:
                 continue
-            seen.add(article["item_id"])
+            seen_in_feed.add(article["item_id"])
             if article["in_fallback_pool"]:
                 feed_articles.append(article)
                 articles.append(article)
-        counts[title] = {
-            "primary": sum(1 for article in feed_articles if article["in_primary_window"]),
-            "fallback_pool": len(feed_articles),
-        }
+        counts.append({
+            "title": title,
+            "feed_id": feed_id,
+            "source_kind": source_kind,
+            "primary_feed_items": sum(
+                1 for article in feed_articles if article["in_primary_window"]
+            ),
+            "fallback_feed_items": len(feed_articles),
+        })
 
     articles.sort(key=lambda article: article["published_at"] or "", reverse=True)
     return {
@@ -318,11 +454,18 @@ def fetch_articles(
             "end": now_utc.astimezone(SHANGHAI).isoformat(),
         },
         "fallback_start": fallback_start.astimezone(SHANGHAI).isoformat(),
-        "target_feeds": list(TARGET_FEEDS),
+        "source_selection": {
+            "direct_feed_title_suffix": "-今天看啥",
+            "digest_feed_title": DIGEST_FEED_TITLE,
+        },
+        "target_subscriptions": subscriptions,
+        "target_feeds": [subscription["title"] for subscription in subscriptions],
         "known_concept_labels": [label for label in user_labels if label.startswith(CONCEPT_PREFIX)],
+        "selected_story_keys": _selected_story_keys(user_labels),
+        "story_concepts": _story_concepts(user_labels),
         "selected_label_exists": SELECTED_LABEL in user_labels,
         "counts": counts,
-        "articles": articles,
+        "feed_items": articles,
     }
 
 
@@ -341,12 +484,56 @@ def _normalise_concepts(values: Iterable[str]) -> list[str]:
     return concepts
 
 
-def apply_labels(client: FreshRSSClient, item_id: str, concepts: Iterable[str]) -> list[str]:
+def story_key_from_url(value: str) -> str:
+    parsed = urlsplit(value.strip())
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+        raise FreshRSSError("Story URL must begin with http:// or https:// and include a host")
+    host = parsed.hostname.lower()
+    port = parsed.port
+    if port and not ((parsed.scheme == "http" and port == 80) or (parsed.scheme == "https" and port == 443)):
+        host = f"{host}:{port}"
+    path = parsed.path or "/"
+    normalized = urlunsplit((parsed.scheme.lower(), host, path, parsed.query, ""))
+    return sha256(normalized.encode("utf-8")).hexdigest()[:16]
+
+
+def labels_for_selection(
+    concepts: Iterable[str],
+    *,
+    story_url: str | None = None,
+    digest_component: bool = False,
+) -> list[str]:
     concepts = _normalise_concepts(concepts)
+    if digest_component and not story_url:
+        raise FreshRSSError("Digest components require --story-url for component-level history")
+    labels = [f"{CONCEPT_PREFIX}{concept}" for concept in concepts]
+    if story_url:
+        story_key = story_key_from_url(story_url)
+        labels.extend(
+            f"{STORY_CONCEPT_PREFIX}{story_key}/{concept}" for concept in concepts
+        )
+        labels.append(f"{SELECTED_STORY_PREFIX}{story_key}")
+    else:
+        labels.append(SELECTED_LABEL)
+    return labels
+
+
+def apply_labels(
+    client: FreshRSSClient,
+    item_id: str,
+    concepts: Iterable[str],
+    *,
+    story_url: str | None = None,
+    digest_component: bool = False,
+) -> list[str]:
+    labels = labels_for_selection(
+        concepts,
+        story_url=story_url,
+        digest_component=digest_component,
+    )
     token = client.get_text("/reader/api/0/token").strip()
     if not token:
         raise FreshRSSError("FreshRSS did not return a mutation token")
-    labels = [f"{CONCEPT_PREFIX}{concept}" for concept in concepts] + [SELECTED_LABEL]
     applied: list[str] = []
     for label in labels:
         response = client.post_text(
@@ -371,8 +558,10 @@ def _write_json(value: dict[str, Any], output: str | None) -> None:
     if output:
         path = Path(output)
         path.write_text(content, encoding="utf-8")
-        primary = sum(1 for article in value.get("articles", []) if article.get("in_primary_window"))
-        print(json.dumps({"output": str(path.resolve()), "primary_articles": primary}, ensure_ascii=False))
+        primary = sum(
+            1 for item in value.get("feed_items", []) if item.get("in_primary_window")
+        )
+        print(json.dumps({"output": str(path.resolve()), "primary_feed_items": primary}, ensure_ascii=False))
     else:
         print(content, end="")
 
@@ -390,15 +579,28 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    subparsers.add_parser("probe", help="Authenticate and verify the three target subscriptions")
+    subparsers.add_parser("probe", help="Authenticate and resolve today's feeds plus the daily digest")
 
     fetch = subparsers.add_parser("fetch", help="Fetch the primary window and seven-day fallback pool")
     fetch.add_argument("--output", help="Write UTF-8 JSON to this path instead of stdout")
     fetch.add_argument("--now", help="Override current time with an ISO-8601 timestamp (testing only)")
 
-    tag = subparsers.add_parser("tag", help="Add concept labels and the selected commit label")
+    story_key = subparsers.add_parser("story-key", help="Compute stable keys for canonical story URLs")
+    story_key.add_argument("--url", action="append", required=True)
+
+    tag = subparsers.add_parser("tag", help="Add concept labels and a story-level commit marker")
     tag.add_argument("--item-id", required=True)
     tag.add_argument("--concept", action="append", default=[])
+    tag.add_argument(
+        "--story-url",
+        required=True,
+        help="Canonical original URL used for story-level history",
+    )
+    tag.add_argument(
+        "--digest-component",
+        action="store_true",
+        help="Tag one story inside a digest without marking the entire digest as selected",
+    )
     tag.add_argument("--apply", action="store_true", help="Actually modify FreshRSS")
     return parser
 
@@ -406,9 +608,16 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        if args.command == "story-key":
+            print(json.dumps({
+                "stories": [
+                    {"url": url, "story_key": story_key_from_url(url)} for url in args.url
+                ]
+            }, ensure_ascii=False, indent=2))
+            return 0
         client = FreshRSSClient.from_env()
         if args.command == "probe":
-            subscriptions = _subscription_map(client)
+            subscriptions = _target_subscriptions(client)
             labels = _user_labels(client)
             result = {
                 "base_url": client.base_url,
@@ -422,12 +631,21 @@ def main(argv: list[str] | None = None) -> int:
             result = fetch_articles(client, now_utc=_parse_now(args.now))
             _write_json(result, args.output)
         elif args.command == "tag":
-            concepts = _normalise_concepts(args.concept)
-            planned = [f"{CONCEPT_PREFIX}{concept}" for concept in concepts] + [SELECTED_LABEL]
+            planned = labels_for_selection(
+                args.concept,
+                story_url=args.story_url,
+                digest_component=args.digest_component,
+            )
             if not args.apply:
                 print(json.dumps({"dry_run": True, "item_id": args.item_id, "labels": planned}, ensure_ascii=False))
             else:
-                applied = apply_labels(client, args.item_id, concepts)
+                applied = apply_labels(
+                    client,
+                    args.item_id,
+                    args.concept,
+                    story_url=args.story_url,
+                    digest_component=args.digest_component,
+                )
                 print(json.dumps({"item_id": args.item_id, "applied": applied}, ensure_ascii=False))
         return 0
     except (FreshRSSError, ValueError) as exc:
