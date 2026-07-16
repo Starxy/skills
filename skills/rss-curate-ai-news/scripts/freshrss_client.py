@@ -185,8 +185,8 @@ def article_from_item(
     item: dict[str, Any],
     feed_title: str,
     now_utc: datetime,
-    primary_start: datetime,
-    fallback_start: datetime,
+    window_start: datetime,
+    window_end: datetime,
     source_kind: str = DIRECT_SOURCE,
     feed_id: str | None = None,
 ) -> dict[str, Any]:
@@ -196,8 +196,7 @@ def article_from_item(
     labels = _extract_labels(item.get("categories") or [])
     crawl_time = _parse_epoch(item.get("crawlTimeMsec"), milliseconds=True)
     article_url = _first_href(item, "canonical") or _first_href(item, "alternate")
-    in_primary = bool(chosen_time and primary_start <= chosen_time <= now_utc)
-    in_fallback = bool(chosen_time and fallback_start <= chosen_time <= now_utc)
+    in_selected_window = bool(chosen_time and window_start <= chosen_time <= window_end)
     return {
         "item_id": str(item.get("id", "")),
         "title": html.unescape(str(item.get("title", "")).strip()),
@@ -209,8 +208,7 @@ def article_from_item(
         "published_at": chosen_time.astimezone(SHANGHAI).isoformat() if chosen_time else None,
         "crawl_at": crawl_time.astimezone(SHANGHAI).isoformat() if crawl_time else None,
         "timestamp_basis": basis,
-        "in_primary_window": in_primary,
-        "in_fallback_pool": in_fallback,
+        "in_selected_window": in_selected_window,
         "labels": labels,
         "already_selected": SELECTED_LABEL in labels,
         "concept_labels": [label for label in labels if label.startswith(CONCEPT_PREFIX)],
@@ -307,7 +305,7 @@ class FreshRSSClient:
         return self._request(path, params=params, method="POST")
 
 
-def _target_subscriptions(client: FreshRSSClient) -> list[dict[str, str]]:
+def _eligible_subscriptions(client: FreshRSSClient) -> list[dict[str, str]]:
     data = client.get_json("/reader/api/0/subscription/list", {"output": "json"})
     matches: list[dict[str, str]] = []
     seen_ids: set[str] = set()
@@ -326,10 +324,6 @@ def _target_subscriptions(client: FreshRSSClient) -> list[dict[str, str]]:
             "source_kind": source_kind,
         })
 
-    if not any(match["source_kind"] == DIRECT_SOURCE for match in matches):
-        raise FreshRSSError("No subscriptions end with '-今天看啥' (optional spaces are allowed)")
-    if not any(match["source_kind"] == DIGEST_SOURCE for match in matches):
-        raise FreshRSSError(f"Missing target subscription: {DIGEST_FEED_TITLE}")
     return sorted(
         matches,
         key=lambda match: (
@@ -338,6 +332,41 @@ def _target_subscriptions(client: FreshRSSClient) -> list[dict[str, str]]:
             match["feed_id"],
         ),
     )
+
+
+def _target_subscriptions(
+    client: FreshRSSClient,
+    requested_titles: Iterable[str] | None = None,
+    *,
+    all_eligible: bool = False,
+) -> list[dict[str, str]]:
+    requested = []
+    for title in requested_titles or []:
+        normalized = normalize_subscription_title(str(title))
+        if normalized and normalized not in requested:
+            requested.append(normalized)
+    if all_eligible and requested:
+        raise FreshRSSError("Choose explicit feed titles or all eligible feeds, not both")
+    if not all_eligible and not requested:
+        raise FreshRSSError("Choose at least one --feed-title or use --all-eligible-feeds")
+
+    available = _eligible_subscriptions(client)
+    if not available:
+        raise FreshRSSError(
+            "No eligible subscriptions found; expected titles ending with '-今天看啥' or "
+            f"the exact digest title {DIGEST_FEED_TITLE!r}"
+        )
+    if all_eligible:
+        return available
+
+    available_titles = {match["normalized_title"] for match in available}
+    unknown = [title for title in requested if title not in available_titles]
+    if unknown:
+        choices = ", ".join(sorted(available_titles))
+        raise FreshRSSError(
+            f"Unknown eligible subscription(s): {', '.join(unknown)}. Available: {choices}"
+        )
+    return [match for match in available if match["normalized_title"] in requested]
 
 
 def _user_labels(client: FreshRSSClient) -> list[str]:
@@ -399,15 +428,30 @@ def _stream_items(
 def fetch_articles(
     client: FreshRSSClient,
     *,
+    window_start: datetime,
+    window_end: datetime,
+    top_k: int,
+    feed_titles: Iterable[str] | None = None,
+    all_eligible: bool = False,
     now_utc: datetime | None = None,
-    primary_hours: int = 24,
-    fallback_days: int = 7,
 ) -> dict[str, Any]:
     now_utc = (now_utc or datetime.now(timezone.utc)).astimezone(timezone.utc)
-    primary_start = now_utc - timedelta(hours=primary_hours)
-    fallback_start = now_utc - timedelta(days=fallback_days)
-    api_fetch_start = now_utc - timedelta(days=fallback_days + 1)
-    subscriptions = _target_subscriptions(client)
+    if window_start.tzinfo is None or window_end.tzinfo is None:
+        raise FreshRSSError("Selected window timestamps must include UTC offsets")
+    window_start = window_start.astimezone(timezone.utc)
+    window_end = window_end.astimezone(timezone.utc)
+    if window_start >= window_end:
+        raise FreshRSSError("Selected window end must be later than its start")
+    if top_k < 1:
+        raise FreshRSSError("Top K must be a positive integer")
+
+    requested_titles = list(feed_titles or [])
+    api_fetch_start = window_start - timedelta(days=1)
+    subscriptions = _target_subscriptions(
+        client,
+        requested_titles,
+        all_eligible=all_eligible,
+    )
     user_labels = _user_labels(client)
     articles: list[dict[str, Any]] = []
     counts: list[dict[str, Any]] = []
@@ -424,39 +468,37 @@ def fetch_articles(
                 item,
                 title,
                 now_utc,
-                primary_start,
-                fallback_start,
+                window_start,
+                window_end,
                 source_kind=source_kind,
                 feed_id=feed_id,
             )
             if not article["item_id"] or article["item_id"] in seen_in_feed:
                 continue
             seen_in_feed.add(article["item_id"])
-            if article["in_fallback_pool"]:
+            if article["in_selected_window"]:
                 feed_articles.append(article)
                 articles.append(article)
         counts.append({
             "title": title,
             "feed_id": feed_id,
             "source_kind": source_kind,
-            "primary_feed_items": sum(
-                1 for article in feed_articles if article["in_primary_window"]
-            ),
-            "fallback_feed_items": len(feed_articles),
+            "selected_window_feed_items": len(feed_articles),
         })
 
     articles.sort(key=lambda article: article["published_at"] or "", reverse=True)
     return {
         "generated_at": now_utc.astimezone(SHANGHAI).isoformat(),
         "timezone": "Asia/Shanghai",
-        "primary_window": {
-            "start": primary_start.astimezone(SHANGHAI).isoformat(),
-            "end": now_utc.astimezone(SHANGHAI).isoformat(),
+        "selected_window": {
+            "start": window_start.astimezone(SHANGHAI).isoformat(),
+            "end": window_end.astimezone(SHANGHAI).isoformat(),
         },
-        "fallback_start": fallback_start.astimezone(SHANGHAI).isoformat(),
-        "source_selection": {
-            "direct_feed_title_suffix": "-今天看啥",
-            "digest_feed_title": DIGEST_FEED_TITLE,
+        "selection": {
+            "channel_mode": "all_eligible" if all_eligible else "explicit",
+            "requested_feed_titles": requested_titles,
+            "selected_feed_titles": [subscription["title"] for subscription in subscriptions],
+            "top_k": top_k,
         },
         "target_subscriptions": subscriptions,
         "target_feeds": [subscription["title"] for subscription in subscriptions],
@@ -558,10 +600,11 @@ def _write_json(value: dict[str, Any], output: str | None) -> None:
     if output:
         path = Path(output)
         path.write_text(content, encoding="utf-8")
-        primary = sum(
-            1 for item in value.get("feed_items", []) if item.get("in_primary_window")
-        )
-        print(json.dumps({"output": str(path.resolve()), "primary_feed_items": primary}, ensure_ascii=False))
+        selected = len(value.get("feed_items", []))
+        print(json.dumps({
+            "output": str(path.resolve()),
+            "selected_window_feed_items": selected,
+        }, ensure_ascii=False))
     else:
         print(content, end="")
 
@@ -575,13 +618,70 @@ def _parse_now(value: str | None) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
+def _positive_int(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be an integer") from exc
+    if parsed < 1:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return parsed
+
+
+def _parse_window_timestamp(value: str, option: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise FreshRSSError(f"{option} must be a valid ISO-8601 timestamp") from exc
+    if parsed.tzinfo is None:
+        raise FreshRSSError(f"{option} must include a UTC offset")
+    return parsed.astimezone(timezone.utc)
+
+
+def _resolve_fetch_window(
+    args: argparse.Namespace,
+    now_utc: datetime | None = None,
+) -> tuple[datetime, datetime]:
+    now_utc = (now_utc or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    has_explicit = bool(args.start or args.end)
+    if args.hours is not None:
+        if has_explicit:
+            raise FreshRSSError("Use --hours or --start/--end, not both")
+        return now_utc - timedelta(hours=args.hours), now_utc
+    if not has_explicit:
+        raise FreshRSSError("Choose a time range with --hours or both --start and --end")
+    if not args.start or not args.end:
+        raise FreshRSSError("Explicit time ranges require both --start and --end")
+    start = _parse_window_timestamp(args.start, "--start")
+    end = _parse_window_timestamp(args.end, "--end")
+    if start >= end:
+        raise FreshRSSError("--end must be later than --start")
+    return start, end
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    subparsers.add_parser("probe", help="Authenticate and resolve today's feeds plus the daily digest")
+    subparsers.add_parser("probe", help="List eligible FreshRSS subscriptions for manual selection")
 
-    fetch = subparsers.add_parser("fetch", help="Fetch the primary window and seven-day fallback pool")
+    fetch = subparsers.add_parser("fetch", help="Fetch a manually selected channel and time range")
+    channels = fetch.add_mutually_exclusive_group(required=True)
+    channels.add_argument(
+        "--feed-title",
+        action="append",
+        help="Exact eligible subscription title; repeat to select multiple channels",
+    )
+    channels.add_argument(
+        "--all-eligible-feeds",
+        action="store_true",
+        help="Explicitly select every eligible subscription",
+    )
+    time_range = fetch.add_mutually_exclusive_group(required=True)
+    time_range.add_argument("--hours", type=_positive_int, help="Select the most recent N hours")
+    time_range.add_argument("--start", help="Explicit window start as ISO-8601 with a UTC offset")
+    fetch.add_argument("--end", help="Explicit window end as ISO-8601 with a UTC offset")
+    fetch.add_argument("--top-k", type=_positive_int, required=True, help="Number of final stories to select")
     fetch.add_argument("--output", help="Write UTF-8 JSON to this path instead of stdout")
     fetch.add_argument("--now", help="Override current time with an ISO-8601 timestamp (testing only)")
 
@@ -594,7 +694,7 @@ def build_parser() -> argparse.ArgumentParser:
     tag.add_argument(
         "--story-url",
         required=True,
-        help="Canonical original URL used for story-level history",
+        help="Canonical review-unit URL used for story-level history",
     )
     tag.add_argument(
         "--digest-component",
@@ -615,20 +715,36 @@ def main(argv: list[str] | None = None) -> int:
                 ]
             }, ensure_ascii=False, indent=2))
             return 0
+        now_utc: datetime | None = None
+        window_start: datetime | None = None
+        window_end: datetime | None = None
+        if args.command == "fetch":
+            now_utc = _parse_now(args.now) or datetime.now(timezone.utc)
+            window_start, window_end = _resolve_fetch_window(args, now_utc)
+
         client = FreshRSSClient.from_env()
         if args.command == "probe":
-            subscriptions = _target_subscriptions(client)
+            subscriptions = _eligible_subscriptions(client)
             labels = _user_labels(client)
             result = {
                 "base_url": client.base_url,
                 "username": client.username,
-                "target_subscriptions": subscriptions,
+                "eligible_subscriptions": subscriptions,
                 "user_labels": len(labels),
                 "known_concept_labels": [label for label in labels if label.startswith(CONCEPT_PREFIX)],
             }
             print(json.dumps(result, ensure_ascii=False, indent=2))
         elif args.command == "fetch":
-            result = fetch_articles(client, now_utc=_parse_now(args.now))
+            assert now_utc is not None and window_start is not None and window_end is not None
+            result = fetch_articles(
+                client,
+                window_start=window_start,
+                window_end=window_end,
+                top_k=args.top_k,
+                feed_titles=args.feed_title,
+                all_eligible=args.all_eligible_feeds,
+                now_utc=now_utc,
+            )
             _write_json(result, args.output)
         elif args.command == "tag":
             planned = labels_for_selection(
