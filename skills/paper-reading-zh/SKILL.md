@@ -1,7 +1,7 @@
 ---
 name: paper-reading-zh
 disable-model-invocation: true
-description: 中文论文精读工作流。Use when the user provides a paper anchor such as a PDF, arXiv/OpenReview/ACM/IEEE/venue page link, paper title, abstract/full text, figure or table screenshot, or a list of papers, and also asks for deep reading, explanation, seminar/blog-style walkthrough, implementation or reproduction analysis, engineering integration or feasibility analysis, literature survey, comparison, figure-by-figure/table-by-table reading, formula explanation, or experiment analysis. Do not use for plain translation, single-term definitions, BibTeX only, or merely finding/downloading a paper.
+description: 中文论文精读工作流。Use when the user provides a paper anchor such as a PDF, arXiv/OpenReview/ACM/IEEE/venue page link, paper title, abstract/full text, figure or table screenshot, or a list of papers — either with a deep-reading request (deep reading, explanation, summary/TL;DR, seminar/blog-style walkthrough, implementation/reproduction feasibility analysis, engineering integration analysis, literature survey, comparison, figure-by-figure reading, formula explanation, experiment analysis, evidence audit), or with no stated request yet (clarify once between deep reading, engineering breakdown, and comparison). Also use when the user expresses a deep-reading intent but has not named the paper (ask once which paper). Do not use for plain translation, single-term definitions, BibTeX only, or merely finding/downloading a paper.
 ---
 
 # Paper Reading Zh
@@ -14,16 +14,19 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 
 ## 触发边界
 
-必须同时满足两类条件才进入本 skill：
+进入本 skill 依据两类信号；锚点与意图齐备时直接进入，只有其一时按下面的规则澄清一次：
 
 1. 论文锚点：PDF、arXiv / OpenReview / ACM / IEEE / 会议页面链接、论文标题、全文、摘要、图表截图，或多篇论文列表。
-2. 深读意图：精读、详解、讲解、读懂、组会、技术博客、讲给新人、复现、实现、工程接入、可行性判断、调研、比较、按图表、逐图、逐表、公式讲解，或实验分析。
+2. 深读意图：精读、详解、讲解、读懂、总结、解读、概览、TL;DR、组会、技术博客、讲给新人、复现、实现、工程接入、可行性判断、调研、比较、按图表、逐图、逐表、公式讲解、实验分析、证据审计、主张和证据、证据链、哪些结论被实验支持，或逐项核对结论依据。
 
 边界不完整时只澄清一次：
 
-- 只有论文锚点：问用户想要“深读 / 工程拆解 / 比较”，不要先做预检。
+- 消息含任何泛化阅读动词（看看、读读、瞅瞅、帮我看、了解一下）即视为有深读意图，直接进入默认深读模式，不澄清。
+- 只有纯锚点、零附言时才澄清一次：问用户想要“深读 / 工程拆解 / 比较 / 证据审计”，不要先做预检。
 - 只有深读意图：问“是哪一篇论文”，接受标题、链接或 PDF。
 - 多篇论文但目的不清：问用户是逐篇解释还是横向比较。
+
+每个边界缺口最多澄清一次；材料退化确认（仅摘要时问是否继续）与比较维度确认属于流程内确认，不计入澄清次数。
 
 以下场景不触发：
 
@@ -32,6 +35,8 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 - 只生成 BibTeX。
 - 只下载 PDF 或找论文链接。
 
+用户明确要求直接写代码、搭建工程或产出可运行实现时，不输出完整工程拆解报告：先给出压缩的复现要点清单（关键公式 / 算法步骤、论文未说明的实现缺口、需要用户确认的设计选择），然后让位于正常编码流程。证据规则在要点清单中照常生效。
+
 ## 执行流程
 
 1. 判断阅读模式：
@@ -39,12 +44,13 @@ description: 中文论文精读工作流。Use when the user provides a paper an
    - 工程拆解模式：实现、复现、怎么做、工程接入、可行性判断意图。
    - 调研比较模式：多篇论文、比较、区别、脉络、调研意图。
    - 不确定时默认深读模式，不反复询问。
-   - 论文不是标准方法 / 实验 / 结果结构（如 perspective、roadmap、立场、产业 thesis、white paper、综述）时，深读模式下使用 `references/modes.md` 的观点 / 路线图变体调整主体章节，不要硬套“方法 / 实验 / 结果”。
 2. 判断可叠加子开关：
    - 组会 / 技术博客风格：用于组会、博客、讲给新人、讲清楚为什么。
    - 按图表顺序组织：用于按图表、逐图、逐表、按论文顺序、跟着图表讲；详细骨架见 `references/modes.md` 的按图表顺序子开关。
-3. 需要详细模式流程或输出骨架时读取 `references/modes.md`。
-4. 回答前明确可读材料范围：
+   - 证据审计：用于“证据审计、主张和证据、证据链、哪些结论被实验支持、逐项核对结论依据”等意图，可与任一模式和论文类型叠加；详细规则见 `references/modes.md`。
+   - 证据审计至少输出：核心主张、原文锚点、证据类型、支持强度（含依据）、未覆盖问题。缺少可定位证据时写“未见直接证据”或“无法判断”，不要把缺少证据写成反证。
+   - 证据审计不引入 claim id、固定 traceability manifest、默认联网抓取或脚本运行依赖。
+3. 回答前明确可读材料范围：
    - 有 PDF 或全文：优先基于可读取原文。
    - 只能读取部分内容：先说明可见范围，再在范围内回答。
    - 只有链接：尝试获取 arXiv abstract、OpenReview、HTML 或 PDF 文本层。
@@ -52,24 +58,31 @@ description: 中文论文精读工作流。Use when the user provides a paper an
    - 只有标题且检索失败：明确说明无法核验到原文与元数据，不基于猜测进入深读。
    - 候选标题、作者、年份或摘要与用户上下文明显不一致：说明不一致点，不进入深读。
    - 标题或链接无法获取任何可信材料：说明信息缺口并退出深读，不靠常识补论文内容。
-   - 只能得到摘要：必须写“仅基于摘要”，不要进入完整深读；轻量解读前先问用户是否继续。
+   - 只能得到摘要：必须写“仅基于摘要”，不要进入完整深读；轻量解读前先问用户是否继续。用户只粘贴摘要且本轮没有实际读取全文时，即使认出论文并记得其内容，也按只能得到摘要处理。
    - 只有截图：只讲截图可支持的内容。
    - PDF 抽取的公式、表格或图 caption 出现明显乱码、错位或缺失时，在材料范围里说明；不基于乱码重构公式，只解释上下文可确认的含义。
-5. 能核验时核验外部事实：
+   - 训练记忆不是可读材料。材料范围只能声明本轮实际读取的原文或用户实际提供的内容；即使能认出论文，也不要声称已读全文，不要基于记忆补章节编号、图表、公式或实验数字，超出已读材料的部分按上述兜底规则处理。
+4. 基于实际可读材料判断论文类型：
+   - 区分标准方法 / 实验、系统 / 测量、数据集 / benchmark、理论 / 证明、综述 / 立场，以及观点 / 路线图变体。
+   - 不只看标题或 venue；按材料的主要贡献与主要证据结构选择最接近的类型。混合型论文选主类型，并可说明次要类型。
+   - 类型不确定时不要反复追问；基于当前可读材料作最接近判断并说明依据。若仍无法判断，沿用所选主模式，只保留材料实际支持的章节，不强行套标准方法 / 实验骨架。
+   - 标准方法 / 实验论文沿用默认深读骨架。其他类型或混合型论文读取 `references/paper-types.md`，不要硬套“方法 / 实验 / 结果”。
+5. 需要详细主模式、按图表或证据审计流程时读取 `references/modes.md`；需要非标准论文类型的识别边界与输出骨架时读取 `references/paper-types.md`。
+6. 能核验时核验外部事实：
    - venue、年份、CCF、代码链接、官方项目页、arXiv 元数据都属于外部事实。
    - 优先核验路径：arXiv `abs` / `html` / PDF 页面；OpenReview、ACM、IEEE 或会议 proceedings 官方页面；Hugging Face Papers markdown 或 API 页面；Semantic Scholar、DBLP 或官方出版页面；论文正文、官方项目页或仓库 README。
    - 未实际核验过的字段写“未核验”，不留空、不填默认值；找过但没找到写“未找到”。
    - 非官方代码必须标注“非官方实现”。
    - arXiv 版本和会议版本不同时，说明当前使用的版本。
-6. 调研比较模式下，如果用户没有给出明确比较维度，先给默认维度并让用户确认或修改；默认维度见 `references/modes.md`。
-7. 按选定模式用中文回答，并遵守证据边界。
-8. 后续追问默认继承上一轮论文上下文、术语表和模式，除非用户改变要求。
+7. 调研比较模式下，如果用户没有给出明确比较维度，先给默认维度并让用户确认或修改；默认维度见 `references/modes.md`。
+8. 按选定模式、论文类型和子开关用中文回答，并遵守证据边界。
+9. 后续追问默认继承上一轮论文上下文、术语表、模式、论文类型和子开关，除非用户改变要求。
 
 ## 默认输出
 
-默认采用中等深读，约 2000 到 3500 中文字。只有用户明确说“越详细越好”或类似要求时再展开成长篇。
+默认采用中等深读，默认不超过 3500 中文字。只有用户明确说“越详细越好”或类似要求时再展开成长篇。
 
-默认深读骨架：
+标准方法 / 实验论文的默认深读骨架：
 
 ```markdown
 关键词：...
@@ -90,11 +103,15 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 5. 复现/应用提示（条件性省略）
 ```
 
-字段写法和模式变体见 `references/modes.md`。
+模式与子开关见 `references/modes.md`；论文类型变体见 `references/paper-types.md`。
+
+用户只要求总结、概览或 TL;DR 时，使用轻量档位：只输出前置块（关键词、一段话总结、论文基本信息 4 项），不展开第 1-5 节；材料范围与证据规则照常生效。用户追问细节时再进入完整深读。只有摘要可读时仍先走“仅基于摘要”兜底；轻量档位不豁免材料范围说明。
 
 硬约束：
 
-- 关键词不超过 5 个，每个不超过 8 个中文字符。
+以下硬约束适用于深读模式与工程拆解模式的前置块和正文；调研比较模式不输出关键词与一段话总结，改为“比较对象与材料范围 + 一句话结论”，正文长度同样默认不超过 3500 中文字。
+
+- 关键词不超过 5 个，每个不超过 8 个汉字或 3 个英文单词。
 - 一段话总结不超过 150 字，单段，不分点。
 - 默认论文基本信息只输出 4 项：标题、venue/年份、链接、任务领域。
 - 用户明确要求作者、CCF 等级、代码时，可加进基本信息块；工程拆解模式默认追加“官方/非官方代码标注”。作者和 CCF 仍只在用户明确要求或确有必要时输出。
@@ -129,8 +146,8 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 - 如果数字来自摘要，必须写“摘要中提到”。
 - 跨论文、跨模型、跨版本比较时，必须检查数据集、评估协议、模型规模、训练预算、指标定义和测试 setting 是否一致；不一致或未知时标注“口径不完全可比”或“口径未核验”，不要写成简单胜负。
 - 论文没有说明的实现细节写“论文未说明”，不要用合理猜测补齐。
-- 工程拆解模式下，如果用户提供官方/非官方代码仓库、代码片段或实现文件，要把论文公式、算法步骤和模块描述与代码中的函数、类、张量形状、超参数对齐；非官方代码只能作为实现参考，不能当作论文事实。
-- 避免“完全解决”“全面优于”“适用于所有场景”这类绝对化表达，除非论文和实验确实支持。
+- 工程拆解模式下，公式-代码对齐只在用户提供官方/非官方代码仓库、代码片段或实现文件时启用：把论文公式、算法步骤和模块描述与代码中的函数、类、张量形状、超参数对齐；非官方代码只能作为实现参考，不能当作论文事实。
+- 避免“完全解决”“全面优于”“适用于所有场景”这类绝对化表达，除非论文和证据确实支持。
 - 区分论文事实和自己的推断；不确定处要明说。
 
 ## 术语规则
@@ -146,9 +163,9 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 批判性讨论必须区分四层：
 
 1. 论文声明：作者声称解决了什么、贡献是什么。
-2. 实验支持：实验实际证明了什么，支持到什么程度。
-3. 合理推断：基于方法和结果可以推断什么，但论文没有直接证明。
-4. 不确定或未覆盖：假设漏洞、实验缺口、未覆盖场景、复现风险。
+2. 证据支持：实验、测量、证明或论证实际支持了什么，支持到什么程度。
+3. 合理推断：基于方法、论证和结果可以推断什么，但论文没有直接证明。
+4. 不确定或未覆盖：假设漏洞、证据缺口、未覆盖场景、复现风险。
 
 分析实验时不能只说“A 比 B 好”，必须说明它验证了方法部分的哪个假设或设计选择。
 
@@ -156,7 +173,8 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 
 最终回答前检查：
 
-- 是否明确可读材料范围。
+- 是否明确可读材料范围，且声明的材料全部来自本轮实际读取或用户提供内容，而非训练记忆。
+- 是否按主要贡献与证据结构选择论文类型；不确定时是否说明判断而未反复追问。
 - 是否避免默认全文翻译。
 - 是否没有编造 venue、CCF、代码链接和实现细节。
 - 外部事实是否按可用路径核验，未核验或未找到是否明确标注。
@@ -167,6 +185,7 @@ description: 中文论文精读工作流。Use when the user provides a paper an
 - 术语是否首次中英对照、后文一致。
 - 对高影响产业声明，是否标注“论文内部声明 / 作者预测 / 已公开第三方核验 / 未核验”。
 - PDF 抽取异常是否已在材料范围中说明，且没有基于乱码重构公式、表格或图表。
+- 证据审计触发时，是否包含核心主张、原文锚点、证据类型、支持强度依据和未覆盖问题；是否避免把缺少证据写成反证。
 - 是否区分论文事实、实验支持、合理推断和不确定信息。
 - 是否根据论文性质和用户目标调整章节权重。
 - 是否避免寒暄、emoji 和模板化套话。
