@@ -1,7 +1,7 @@
 interface:
   display_name: "论文初读"
-  short_description: "首次完整阅读单篇论文，提炼动机、核心思路、贡献与证据边界"
-  default_prompt: "请使用 $paper-pass 对这篇单篇论文做首次完整阅读：先确认可读取全文，再给出核心总结和简明专业的长文解析。"
+  short_description: "三阶段初读单篇论文：核心提取、逐节观点与写作思路重构"
+  default_prompt: "请使用 $paper-pass 对这篇单篇论文做三阶段初读：确认全文和版本，逐节提炼核心观点，再重构作者的问题、思路、贡献与边界。"
 
 policy:
   allow_implicit_invocation: false

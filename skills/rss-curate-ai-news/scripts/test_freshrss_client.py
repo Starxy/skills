@@ -17,6 +17,8 @@ from freshrss_client import (  # noqa: E402
     SELECTED_STORY_PREFIX,
     STORY_CONCEPT_PREFIX,
     FreshRSSError,
+    _eligible_subscriptions,
+    _resolve_fetch_window,
     _story_concepts,
     _target_subscriptions,
     apply_labels,
@@ -124,7 +126,7 @@ class FreshRSSClientTests(unittest.TestCase):
         self.assertIsNone(subscription_source_kind("机器之心"))
         self.assertIsNone(subscription_source_kind("今天看啥-备份"))
 
-    def test_target_subscriptions_include_all_matching_ids_and_exclude_old_feeds(self):
+    def test_eligible_subscriptions_include_all_matching_ids_and_exclude_old_feeds(self):
         client = FakeSubscriptionClient([
             {"id": "feed/1", "title": "新智元"},
             {"id": "feed/2", "title": "新智元 - 今天看啥"},
@@ -133,31 +135,65 @@ class FreshRSSClientTests(unittest.TestCase):
             {"id": "feed/5", "title": "橘鸦AI早报"},
             {"id": "feed/6", "title": "量子位 - 今天看啥"},
         ])
-        matches = _target_subscriptions(client)
+        matches = _eligible_subscriptions(client)
         self.assertEqual(["feed/2", "feed/3", "feed/4", "feed/6", "feed/5"], [m["feed_id"] for m in matches])
         self.assertEqual(4, sum(m["source_kind"] == DIRECT_SOURCE for m in matches))
         self.assertEqual(DIGEST_SOURCE, matches[-1]["source_kind"])
 
-    def test_target_subscriptions_require_today_feeds_and_digest(self):
+    def test_target_subscriptions_honor_manual_channel_scope(self):
+        client = FakeSubscriptionClient([
+            {"id": "feed/2", "title": "新智元 - 今天看啥"},
+            {"id": "feed/4", "title": "量子位 - 今天看啥"},
+            {"id": "feed/5", "title": "橘鸦AI早报"},
+            {"id": "feed/6", "title": "量子位 - 今天看啥"},
+        ])
+        matches = _target_subscriptions(client, [" 量子位 - 今天看啥 "])
+        self.assertEqual(["feed/4", "feed/6"], [match["feed_id"] for match in matches])
+        digest_only = _target_subscriptions(client, ["橘鸦AI早报"])
+        self.assertEqual(["feed/5"], [match["feed_id"] for match in digest_only])
+
+    def test_target_subscriptions_require_explicit_valid_scope(self):
+        client = FakeSubscriptionClient([
+            {"id": "feed/2", "title": "新智元 - 今天看啥"},
+            {"id": "feed/5", "title": "橘鸦AI早报"},
+        ])
         with self.assertRaises(FreshRSSError):
-            _target_subscriptions(FakeSubscriptionClient([{"id": "feed/1", "title": "橘鸦AI早报"}]))
+            _target_subscriptions(client)
         with self.assertRaises(FreshRSSError):
-            _target_subscriptions(FakeSubscriptionClient([{"id": "feed/2", "title": "新智元-今天看啥"}]))
+            _target_subscriptions(client, ["不存在的频道"])
+        self.assertEqual(2, len(_target_subscriptions(client, all_eligible=True)))
 
     def test_fetch_contract_preserves_same_item_id_from_different_feeds(self):
         now = datetime(2026, 7, 14, 2, tzinfo=timezone.utc)
-        result = fetch_articles(FakeFetchClient(now), now_utc=now)
+        result = fetch_articles(
+            FakeFetchClient(now),
+            window_start=now - timedelta(hours=24),
+            window_end=now,
+            top_k=4,
+            all_eligible=True,
+            now_utc=now,
+        )
         self.assertEqual(2, len(result["feed_items"]))
         self.assertEqual({"feed/2", "feed/3"}, {item["feed_id"] for item in result["feed_items"]})
         self.assertEqual({DIRECT_SOURCE, DIGEST_SOURCE}, {item["source_kind"] for item in result["feed_items"]})
         self.assertEqual(["abc123"], result["selected_story_keys"])
         self.assertEqual({"abc123": ["智能体"]}, result["story_concepts"])
         self.assertEqual(2, len(result["counts"]))
+        self.assertEqual(4, result["selection"]["top_k"])
+        self.assertEqual("all_eligible", result["selection"]["channel_mode"])
+        self.assertNotIn("fallback_start", result)
 
     def test_fetch_follows_stream_continuation_until_exhausted(self):
         now = datetime(2026, 7, 14, 2, tzinfo=timezone.utc)
         client = FakePaginatedClient(now)
-        result = fetch_articles(client, now_utc=now)
+        result = fetch_articles(
+            client,
+            window_start=now - timedelta(hours=4),
+            window_end=now,
+            top_k=2,
+            feed_titles=["机器之心SOTA模型 - 今天看啥"],
+            now_utc=now,
+        )
         direct_items = [item for item in result["feed_items"] if item["feed_id"] == "feed/2"]
         self.assertEqual(["direct-page-1", "direct-page-2"], [item["item_id"] for item in direct_items])
         self.assertEqual(2, len(client.direct_page_params))
@@ -199,9 +235,9 @@ class FreshRSSClientTests(unittest.TestCase):
             "机器之心",
             now,
             now - timedelta(hours=24),
-            now - timedelta(days=7),
+            now,
         )
-        self.assertTrue(article["in_primary_window"])
+        self.assertTrue(article["in_selected_window"])
         self.assertTrue(article["already_selected"])
         self.assertEqual(["AI概念/智能体"], article["concept_labels"])
 
@@ -219,9 +255,69 @@ class FreshRSSClientTests(unittest.TestCase):
             "量子位",
             now,
             now - timedelta(hours=24),
-            now - timedelta(days=7),
+            now,
         )
         self.assertEqual("https://example.com/safe", article["article_url"])
+
+    def test_fetch_excludes_items_outside_selected_window(self):
+        now = datetime(2026, 7, 14, 2, tzinfo=timezone.utc)
+        result = fetch_articles(
+            FakeFetchClient(now),
+            window_start=now - timedelta(minutes=30),
+            window_end=now,
+            top_k=1,
+            all_eligible=True,
+            now_utc=now,
+        )
+        self.assertEqual([], result["feed_items"])
+        self.assertTrue(all(count["selected_window_feed_items"] == 0 for count in result["counts"]))
+
+    def test_resolve_fetch_window_supports_relative_hours(self):
+        now = datetime(2026, 7, 14, 2, tzinfo=timezone.utc)
+        args = build_parser().parse_args([
+            "fetch", "--feed-title", "量子位 - 今天看啥", "--hours", "36", "--top-k", "5",
+        ])
+        start, end = _resolve_fetch_window(args, now)
+        self.assertEqual(now - timedelta(hours=36), start)
+        self.assertEqual(now, end)
+        self.assertEqual(5, args.top_k)
+
+    def test_resolve_fetch_window_supports_explicit_range(self):
+        args = build_parser().parse_args([
+            "fetch", "--all-eligible-feeds", "--start", "2026-07-12T08:00:00+08:00",
+            "--end", "2026-07-14T08:00:00+08:00", "--top-k", "3",
+        ])
+        start, end = _resolve_fetch_window(args, datetime(2026, 7, 14, 2, tzinfo=timezone.utc))
+        self.assertEqual(datetime(2026, 7, 12, 0, tzinfo=timezone.utc), start)
+        self.assertEqual(datetime(2026, 7, 14, 0, tzinfo=timezone.utc), end)
+
+    def test_fetch_cli_requires_channel_time_and_top_k(self):
+        parser = build_parser()
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args(["fetch", "--hours", "24", "--top-k", "2"])
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args(["fetch", "--all-eligible-feeds", "--hours", "24"])
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args(["fetch", "--all-eligible-feeds", "--top-k", "2"])
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args(["fetch", "--all-eligible-feeds", "--hours", "24", "--top-k", "0"])
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args(["fetch", "--all-eligible-feeds", "--hours", "0", "--top-k", "2"])
+
+    def test_resolve_fetch_window_rejects_mixed_or_incomplete_ranges(self):
+        parser = build_parser()
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            parser.parse_args([
+                "fetch", "--all-eligible-feeds", "--hours", "24", "--start",
+                "2026-07-12T08:00:00+08:00", "--end", "2026-07-14T08:00:00+08:00",
+                "--top-k", "2",
+            ])
+        incomplete = parser.parse_args([
+            "fetch", "--all-eligible-feeds", "--start", "2026-07-12T08:00:00+08:00",
+            "--top-k", "2",
+        ])
+        with self.assertRaises(FreshRSSError):
+            _resolve_fetch_window(incomplete, datetime(2026, 7, 14, 2, tzinfo=timezone.utc))
 
     def test_legacy_item_selected_label_is_applied_last_as_commit_marker(self):
         client = FakeClient()
