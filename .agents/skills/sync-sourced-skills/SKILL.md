@@ -1,5 +1,6 @@
 ---
 name: sync-sourced-skills
+disable-model-invocation: true
 description: Use when updating one or more copied agent skills in this repository from recorded upstream sources, source URLs, README Source entries, GitHub tree links, or user-provided original skill locations while preserving intentional local project changes.
 metadata:
   internal: true

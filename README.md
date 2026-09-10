@@ -3,6 +3,11 @@
 This repository stores Agent Skills that can be discovered and installed with
 `npx skills`.
 
+All skills in this repository, including repository maintenance skills, require
+explicit invocation (for example, `$paper-pass`). Implicit invocation is disabled
+with `disable-model-invocation: true` in `SKILL.md` and
+`policy.allow_implicit_invocation: false` in `agents/openai.yaml`.
+
 ## Install
 
 ```bash
@@ -56,12 +61,20 @@ Then edit `skills/my-skill/SKILL.md`. Required frontmatter:
 ```markdown
 ---
 name: my-skill
+disable-model-invocation: true
 description: Use when the agent needs to ...
 ---
 ```
 
 Use lowercase letters, digits, and hyphens for skill names, and keep the folder
 name the same as the `name` field.
+
+Also create `agents/openai.yaml` inside the skill directory:
+
+```yaml
+policy:
+  allow_implicit_invocation: false
+```
 
 ## Validate
 

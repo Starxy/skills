@@ -1,5 +1,6 @@
 ---
 name: paper-reading-zh
+disable-model-invocation: true
 description: 中文论文精读工作流。Use when the user provides a paper anchor such as a PDF, arXiv/OpenReview/ACM/IEEE/venue page link, paper title, abstract/full text, figure or table screenshot, or a list of papers, and also asks for deep reading, explanation, seminar/blog-style walkthrough, implementation or reproduction analysis, engineering integration or feasibility analysis, literature survey, comparison, figure-by-figure/table-by-table reading, formula explanation, or experiment analysis. Do not use for plain translation, single-term definitions, BibTeX only, or merely finding/downloading a paper.
 ---
 
