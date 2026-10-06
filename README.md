@@ -23,6 +23,7 @@ npx skills add Starxy/skills
 | `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
 | `paper-reading-zh` | `skills/paper-reading-zh/` | [`MrGeDiao/paper-reading-zh/paper-reading-zh`](https://github.com/MrGeDiao/paper-reading-zh/tree/main/paper-reading-zh) | Chinese paper reading with paper-type adaptation, brief summaries, deep reading, engineering analysis, comparisons, and evidence audits. |
 | `rss-curate-ai-news` | `skills/rss-curate-ai-news/` | Local | User-invoked FreshRSS curation that builds beginner-friendly AI learning paths and supports trend, business, and project decisions with configurable channels, time ranges, and Top K. |
+| `talk-summary` | `skills/talk-summary/` | Local | Summarize interviews, lectures, technical talks, and podcasts with dense, traceable takeaways, preserving evidence, conditions, disagreement, practical details, and verified quotations. |
 | `ultragoal` | `skills/ultragoal/` | [`jxnl/dots/agents/skills/ultragoal`](https://github.com/jxnl/dots/tree/master/agents/skills/ultragoal) | Design, critique, set, create, activate, or run durable Codex goals for persistent or long-running objectives. |
 | `zotero-library` | `skills/zotero-library/` | Local | Automate Zotero user or group library CRUD, collection maintenance, tags, and sync workflows with pyzotero. |
 
