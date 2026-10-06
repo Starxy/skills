@@ -18,6 +18,7 @@ npx skills add Starxy/skills
 
 | Skill | Path | Source | Description |
 | --- | --- | --- | --- |
+| `asr-polish` | `skills/asr-polish/` | Local | Polish long-form ASR transcripts into faithful, fluent reading copies with consistent terminology, readable paragraphs, and reliable chunk continuity. |
 | `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
 | `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
 | `paper-reading-zh` | `skills/paper-reading-zh/` | [`MrGeDiao/paper-reading-zh/paper-reading-zh`](https://github.com/MrGeDiao/paper-reading-zh/tree/main/paper-reading-zh) | Chinese paper reading with paper-type adaptation, brief summaries, deep reading, engineering analysis, comparisons, and evidence audits. |

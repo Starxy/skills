@@ -1,0 +1,7 @@
+interface:
+  display_name: "长视频转写润色"
+  short_description: "将长视频 ASR 转写整理为保留原意、细节和语气的流畅阅读稿"
+  default_prompt: "请使用 $asr-polish 整理我提供的长视频 ASR 转写，修正有依据的误识别，清理口语噪音，适当分段并添加小标题，保留完整内容、语气和讲述顺序。"
+
+policy:
+  allow_implicit_invocation: false
