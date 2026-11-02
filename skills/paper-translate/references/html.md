@@ -1,23 +1,23 @@
-# SingleFile HTML snapshots
+# SingleFile HTML 快照
 
-## Work from the supplied snapshot
+## 从用户提供的快照开始
 
-The usual input is an HTML/HTM file saved by the SingleFile Chrome extension. Read its local static contents and keep an untouched original. The saved original URL is provenance, not an instruction to revisit the site. Use embedded images, styles, fonts, and data resources as supplied; do not re-download them or fetch missing resources by default. Only a user request to acquire content, including a URL-only input, selects retrieval. In that branch, record the acquired snapshot and actual base URL before following the same workflow.
+常见输入是 SingleFile Chrome 扩展保存的 HTML/HTM 文件。读取其本地静态内容，并保留未修改的原件。保存的原始 URL 是来源记录，不是要求重新访问网站的指令。按原样使用内嵌图片、样式、字体及数据资源；默认不重新下载，也不获取缺失资源。只有用户要求获取内容时（包括仅提供 URL 的输入），才进入抓取流程。此时先记录获取的快照和实际基础 URL，再遵循同一工作流程。
 
-Inspect the full snapshot and its visual structure. Identify article text versus navigation/advertising without stripping layout containers or safe surrounding furniture merely to isolate the body. Translate the requested article, including authorial end matter, methods, declarations, captions, notes, and appendices. Mark unsaved/lazy-loaded or otherwise absent content as unavailable; complete what the snapshot contains rather than silently substituting live-site content.
+检查完整快照及其视觉结构。区分文章正文与导航、广告，但不要仅为提取正文就删除版式容器或周围安全的页面元素。翻译用户要求的文章，包括作者撰写的文末内容、方法、声明、图题、注释和附录。将未保存、延迟加载或其他缺失内容标为不可用；完成快照已有内容，不得悄悄替换成实时网站内容。
 
-## Translate in place, retain layout
+## 原位翻译，保留版式
 
-Work in a copy of the original DOM, editing natural-language text nodes and accessible descriptions while preserving IDs, anchors, nested emphasis, classes, safe CSS, embedded resources, and figure/caption associations. Preserve table row/column spans and reading order. Protect code/pre, machine-readable data, and mathematical representations (MathML, LaTeX, or equation images). Avoid global string replacement and generic reader-template reconstruction. Markdown is an explicitly requested alternative, not the default loss of the original layout.
+在原 DOM 的副本上工作，编辑自然语言文本节点和无障碍描述，同时保留 ID、锚点、嵌套强调、类名、安全 CSS、内嵌资源，以及图片和图题的对应关系。保留表格的跨行跨列结构与阅读顺序。保护 code/pre、机器可读数据，以及数学表示（MathML、LaTeX 或公式图片）。避免全局字符串替换及用通用阅读器模板重建。Markdown 只能作为用户明确要求的替代格式，不能默认以丢失原版式为代价改用它。
 
-Treat markup as untrusted data: parse without executing source JavaScript; remove active scripts, event handlers, dangerous URL schemes, and active embeds/forms while retaining safe static children and layout where possible. Audit resource references before preview so rendering does not trigger unintended network access. Keep passive data images/fonts; do not treat executable data content as safe solely because it is embedded. If source scripts were required to display content, use the saved static representation or disclose the gap. Any separately chosen trusted math renderer must not silently introduce a network dependency.
+将标记视为不可信数据：解析时不执行源 JavaScript；删除活动脚本、事件处理器、危险 URL 协议及活动嵌入内容或表单，同时尽可能保留安全的静态子节点和版式。预览前审查资源引用，避免渲染触发非预期网络访问。保留非活动的数据图片和字体；不能仅因内容已内嵌，就将可执行的数据内容视为安全。如果原内容的显示依赖脚本，应使用已保存的静态表示，或说明缺失部分。另行选择的可信数学渲染器也不能悄悄引入网络依赖。
 
-Publisher citation/figure links may use JavaScript even when their targets exist in the snapshot. Where a target is unambiguously recoverable from saved IDs, replace the interaction with a native fragment link without evaluating the script. Otherwise retain its visible label and disclose the inactive link. Check these targets after sanitization, not only before it.
+即使链接目标已存在于快照中，出版商的引文或图片链接仍可能依赖 JavaScript。若能从已保存的 ID 中无歧义地恢复目标，应在不执行脚本的前提下将交互替换为原生页内锚点链接。否则保留可见标签，并说明该链接不可用。安全清理后再次检查这些目标，不能只在清理前检查。
 
-Preserve original column/grid relationships, widths, heading hierarchy, and image/table placement. When Chinese text needs font or spacing changes, use [Chinese reading typography](chinese-typography.md), including its screen-reading ranges and emphasis mapping. Scope CSS changes to the relevant article elements, retain useful existing fonts, and preserve the rest of the safe stylesheet. Text expansion may change height or pagination, so prioritize complete readable content over an impossible pixel match and record significant adjustments.
+保留原有分栏或网格关系、宽度、标题层级，以及图片和表格位置。中文需要调整字体或间距时，使用[中文阅读排版](chinese-typography.md) 中的屏幕阅读范围和强调映射建议。将 CSS 修改限定在相关文章元素，保留有用的现有字体及其余安全样式表。文字膨胀可能改变高度或分页，应优先保证内容完整可读，而非追求不可能的像素级一致，并记录明显调整。
 
-## Inspect the resulting artifact
+## 检查输出成品
 
-Compare source and translated renders at the same viewport: column/grid structure, heading hierarchy, relative spacing, figure/table placement, captions, notes, and final section. Check Chinese glyphs, line breaks, clipping/overflow, long links/code, table cells, and math. Verify coverage against source block IDs and anchors/footnotes in both directions. File/DOM checks alone cannot establish visual fidelity; report rendering checks as not run if unavailable.
+在相同视口下比较原文与译文的渲染结果：分栏或网格结构、标题层级、相对间距、图表位置、图题表题、注释及最后一节。检查中文字形、换行、裁切或溢出、长链接或代码、表格单元格及数学内容。依据原文块 ID 核验覆盖范围，并双向检查锚点与脚注。仅做文件或 DOM 检查不能证明视觉保真；无法渲染时，应将渲染检查报告为未执行。
 
-A SingleFile-style input is not proof of offline completeness. Inventory dependencies and, when claiming offline support, test the safe output with network disabled. If a resource is missing, disclose it and retain its provenance without automatically retrieving it. Localize additional dependencies only when requested/authorized. Deliver the translated HTML, preserving its self-contained resources where available, plus concise exceptions rather than mandatory alternate formats.
+SingleFile 风格的输入不能证明离线资源完整。清点依赖；声称支持离线时，应在禁用网络的环境中测试安全输出。资源缺失时，说明情况并保留来源记录，不要自动获取。只有用户要求或授权时，才将额外依赖本地化。交付翻译后的 HTML，尽可能保留其自包含资源，并简要说明例外情况，不强制增加其他格式。

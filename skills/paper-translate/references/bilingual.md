@@ -1,9 +1,9 @@
-# Requested bilingual output
+# 按需生成双语对照版本
 
-This opt-in layout is an intentional redesign of the parallel output; retain the original-layout default for any separate Chinese-only output. Use the user's layout if specified. Otherwise use A4 landscape, English on the left, Chinese on the right, with a visible central divider. Match title, abstract, and every heading level. Preserve an independent source text; never reconstruct the English from the translation.
+双语对照须由用户主动选择；这种版式是对对照版本有意进行的重新设计，不改变另行输出的纯中文版本默认保留原版式的原则。用户指定了版式时按其要求执行。否则使用 A4 横向、左英文右中文，并设置清晰的中央分隔线。对齐标题、摘要及各级标题。保留独立的原文；绝不能从译文反推英文。
 
-Pair source and translation by stable content-block ID. Each paragraph starts beside its counterpart; let the longer side determine the pair's height. For page-spanning pairs, split at corresponding semantic boundaries and mark continuation rather than letting columns drift. Side-by-side pages from two PDFs are not paragraph alignment.
+按稳定的内容块 ID 配对原文和译文。每段与对应段落并排起始，由较长的一侧决定这一对的高度。跨页的段落对须在对应的语义边界拆分并标明续接，不能任由两栏错位。把两个 PDF 的页面并排摆放不等于段落对齐。
 
-Keep equations semantically intact and paired with the corresponding discussion. Display each figure/table once at full width with the necessary bilingual caption/text; preserve all rows and values. Use one shared English bibliography, with valid citation links from both languages. Avoid duplicating labels/anchors when rendering both languages.
+保持公式语义完整，并与相应讨论配对。每幅图、每张表仅以通栏形式出现一次，附上必要的双语图题、表题和文字；保留全部行及数值。共用一份英文参考文献，两种语言中的引用链接均须有效。渲染双语内容时避免重复标签和锚点。
 
-Render and check actual left/right correspondence at headings, paragraph boundaries, page breaks, equations, footnotes, and full-width floats. Confirm every pair occurs exactly once, and figures/tables/bibliography are not duplicated. For requested Chinese-only plus bilingual outputs, verify both artifacts independently; a bilingual file does not replace the separately requested Chinese one.
+渲染后实际检查标题、段落边界、分页、公式、脚注和通栏浮动体的左右对应关系。确认每对内容恰好出现一次，图、表和参考文献没有重复。用户同时要求纯中文与双语版本时，应分别验证两个成品；双语文件不能替代另行要求的中文文件。

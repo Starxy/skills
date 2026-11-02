@@ -1,21 +1,21 @@
-# PDF-only layout reconstruction
+# 仅有 PDF 时的版式重建
 
-Use the supplied PDF when no HTML or TeX is provided. Do not make an unsolicited source search a prerequisite. If acquisition of a structured source is requested, keep it at the same version; otherwise recognize the PDF's actual pages locally.
+未提供 HTML 或 TeX 时，使用用户提供的 PDF。不要把未经请求的源文件搜索设为前置条件。如果用户要求获取结构化源文件，须保持同一版本；否则在本地识别 PDF 的实际页面。
 
-## Understand pages before translating
+## 翻译前先理解页面
 
-Render and **look at the pages**, not just extracted text. Identify full-width versus single/double-column regions and their reading order, title/abstract/heading hierarchy, running headers and page numbers, footnotes, lists, tables, figures and captions, and mathematical material. Record source page and region locations for the translation inventory. Separate running furniture from body text without dropping authorial notes. Inspect every distinct layout and every ambiguous region; report any pages not examined.
+渲染并**实际查看页面**，不要只看提取文本。识别通栏与单栏、双栏区域及其阅读顺序，标题、摘要和各级标题，页眉和页码，脚注、列表、表格、图片及图题，以及数学内容。在翻译清单中记录原文页码和区域位置。区分页眉页脚等重复元素与正文，但不能丢弃作者注释。检查每一种不同版式和每一处存疑区域；说明哪些页面尚未检查。
 
-Combine available text extraction with visual inspection. Scanned/image-only pages require reliable local OCR and/or visual transcription checked against the pixels; text extraction returning nothing does not mean a blank page. Verify minus signs, subscripts, superscripts, symbols, and table row/column associations. For unreadable regions, identify the page/location and affected content explicitly, translate the readable remainder, and request a better source only where necessary. Never guess missing prose or equations.
+结合可用的文本提取与视觉检查。扫描页或纯图像页需要可靠的本地 OCR，或对照像素核验的目视转录，也可二者结合；提取不到文本不代表该页为空白。核验负号、上下标、符号及表格行列关系。对于无法辨读的区域，明确指出页码、位置及受影响内容，翻译其余可读部分，仅在必要时索要更清晰的来源。绝不能猜测缺失的正文或公式。
 
-## Reconstruct with the original as reference
+## 参照原文重建
 
-Recreate content and layout together: preserve column relationships and reading order, heading hierarchy, figure/table placement and caption association, table structure, and notes. Apply [Chinese reading typography](chinese-typography.md) and let the text reflow at a readable size; do not reduce the body font merely to fit the original page boxes or page count. Do not pour OCR text into a generic single-column template. OCR text is not an editable original layout, and reconstructed source is not the author's original TeX.
+同时重建内容和版式：保留分栏关系与阅读顺序、标题层级、图表位置及其与图题表题的对应关系、表格结构和注释。遵循[中文阅读排版](chinese-typography.md)，以可读字号允许文字重排；不要仅为塞进原页面框或保持原页数而缩小正文字号。不要把 OCR 文本直接灌进通用单栏模板。OCR 文本不是可编辑的原版式，重建源文件也不是作者的原始 TeX。
 
-Reconstruct paragraphs from the source's reading order before applying indentation and spacing. Join continuations split by a page or column boundary only when the source confirms they belong together; retain genuine paragraph breaks, lists, headings, and the association of equations with their surrounding prose.
+先按原文阅读顺序重建段落，再设置缩进和间距。只有原文确认属于同一段时，才能合并被分页或分栏拆开的续文；保留真正的段落分界、列表、标题，以及公式与周围正文的联系。
 
-Retain faithful equation/figure crops when accurate editable reconstruction is unavailable, with disclosed limitations; do not invent original macros or labels. For a requested Chinese PDF, follow [safe TeX build and QA](tex.md) if using TeX. With a self-authored static renderer, pass extracted text as data, escape its markup, and use local images/fonts with external resources and active content disabled. Isolate execution-capable source or templates; a static text-to-PDF reconstruction does not require executing the paper's code or setting up a TeX runtime. Compare actual source/output page images for coverage, reading order, glyphs, clipping, and placement. Complete content and Chinese readability take precedence over exact pixel positions/page counts; explain meaningful layout changes and unverified regions. If rendering/building is blocked, label the source/draft appropriately rather than claiming a validated PDF.
+无法准确重建为可编辑内容时，保留忠实的公式或图片裁剪，并说明局限；不要编造原始宏或标签。用户要求中文 PDF 且采用 TeX 时，遵循[安全 TeX 构建与质量检查](tex.md)。使用自行编写的静态渲染器时，将提取文本作为数据传入，对其中的标记进行转义，使用本地图像和字体，并禁用外部资源与活动内容。对具有执行能力的源文件或模板进行隔离；静态文本转 PDF 重建不需要执行论文代码，也不需要配置 TeX 运行环境。对比原文与输出的实际页面图像，检查覆盖范围、阅读顺序、字形、裁切和位置。内容完整与中文可读性优先于精确像素位置和页数；说明明显的版式变化与未验证区域。如果渲染或构建受阻，应恰当标注源文件或草稿，不能声称已得到验证通过的 PDF。
 
-Check extraction/search of reconstructed Chinese prose as well as its appearance. Distinguish intentional figure/equation crops from an accidentally image-only or unmapped body-text layer, and repair the latter when producing an editable text reconstruction.
+除外观外，还要检查重建中文正文能否提取和搜索。区分有意保留的图像或公式裁剪与意外变成纯图像、或缺少字符映射的正文文本层；制作可编辑文本重建版本时，应修复后者。
 
-Requested parallel PDFs follow [bilingual layout](bilingual.md), aligning content units rather than pairing page numbers. That requested redesign does not change the layout-preserving default for the Chinese-only version.
+用户要求对照 PDF 时，遵循[双语对照版式](bilingual.md)，按内容单元对齐，而不是按页码配对。这种按需重新设计不改变纯中文版本默认保留原版式的原则。

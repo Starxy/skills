@@ -1,60 +1,60 @@
-# Chinese reading typography
+# 中文阅读排版
 
-Use these recommendations when typesetting Chinese PDFs from TeX or PDF-only input, and when adjusting translated HTML typography. They guide fonts, emphasis, and reading density; they do not prescribe a document class, paper size, column count, or page layout. Follow the user's chosen style and reading conditions. The ranges below are practical starting points, not mandatory publication standards.
+从 TeX 或仅有的 PDF 制作中文 PDF，以及调整翻译后 HTML 的排版时，使用这些建议。它们指导字体、强调方式和阅读密度，不规定文档类、纸张大小、栏数或页面布局。遵循用户选择的风格与阅读条件。以下范围是实用起点，而非强制出版标准。
 
-## Choose a coherent font combination
+## 选择协调的字体组合
 
-Default to the academic combination unless the user requests another style:
+除非用户要求其他风格，否则默认采用学术阅读组合：
 
-| Content | Academic reading default |
+| 内容 | 学术阅读默认设置 |
 | --- | --- |
-| Chinese body | Source Han Serif SC or Noto Serif SC, Regular 400 |
-| Chinese headings | Source Han Sans SC or Noto Sans SC, Medium 500 to Bold 700 |
-| Ordinary Chinese bold | Body family, Semibold 600; reserve Bold 700 for stronger emphasis |
-| Short Chinese semantic emphasis | LXGW WenKai or a suitable Kai face, upright Regular 400 |
-| Latin body | STIX Two Text, with its real Regular/Bold/Italic faces as appropriate |
-| Mathematics | STIX Two Math or the existing dedicated math setup; preserve variable, operator, and constant conventions |
-| Code, commands, paths | JetBrains Mono or Noto Sans Mono |
-| Small Chinese captions and table notes | Source Han Sans/Serif or Noto Sans/Serif, Regular 400 to Medium 500, chosen for actual legibility |
+| 中文正文 | 思源宋体简体（Source Han Serif SC）或 Noto Serif SC，常规字重 400 |
+| 中文标题 | 思源黑体简体（Source Han Sans SC）或 Noto Sans SC，中等字重 500 至粗体 700 |
+| 普通中文加粗 | 使用正文字族的半粗体 600；粗体 700 留给更强的强调 |
+| 中文短语的语义强调 | 霞鹜文楷（LXGW WenKai）或合适的楷体，直立、常规字重 400 |
+| 西文正文 | STIX Two Text，按需使用其真实的常规、粗体、斜体字面 |
+| 数学 | STIX Two Math 或现有专用数学配置；保留变量、运算符和常量的惯例 |
+| 代码、命令、路径 | JetBrains Mono 或 Noto Sans Mono |
+| 较小的中文图题和表注 | 思源黑体/宋体（Source Han Sans/Serif）或 Noto Sans/Serif，常规字重 400 至中等字重 500，以实际可读性为准 |
 
-For sustained screen reading, an alternative is Source Han Sans SC/Noto Sans SC body at 400, headings at 500–700, ordinary emphasis at 500–600, and Source Sans 3/Noto Sans for Latin text. Keep dedicated math fonts and use upright Kai or moderate weight for Chinese emphasis. This is an alternative reading style, not a reason to change the paper's layout. Avoid frequent family changes within a body paragraph.
+持续屏幕阅读时，可改用思源黑体简体（Source Han Sans SC）或 Noto Sans SC：正文字重 400、标题 500–700、普通强调 500–600，西文使用 Source Sans 3 或 Noto Sans。保留专用数学字体，中文强调使用直立楷体或适度加粗。这是另一种阅读风格，不是改变论文版式的理由。避免在同一正文段落内频繁切换字族。
 
-Use real font faces/weights rather than simulated bold or slanted Chinese. If a preferred font is unavailable, use an appropriate available equivalent and report the substitution. Check the actual font selected by the renderer, including fallbacks. For a rebuildable project, include redistributable local fonts with their licenses or state the exact font dependencies. If fonts are subsetted for the document, disclose that newly added characters may require a new subset or a full font.
+使用真实字面和字重，不要模拟加粗或把中文机械倾斜。首选字体不可用时，使用合适的可用替代字体，并说明替换情况。检查渲染器实际选用的字体，包括回退字体。对于可重新构建的项目，随附允许再分发的本地字体及其许可证，或明确列出确切的字体依赖。若为文档制作了字体子集，须说明新增字符可能需要重新生成子集或使用完整字体。
 
-## Map emphasis by meaning
+## 按语义映射强调方式
 
-- **Normal/Roman:** use the regular body face.
-- **Bold:** increase weight within the body family; do not turn every bold phrase into a heavy sans-serif heading.
-- **Semantic Italic:** use upright Kai for short Chinese phrases, or moderate bold where Kai would become too frequent. Keep long passages in a readable body face rather than applying Kai throughout.
-- **Bold Italic:** use a stronger Chinese weight, such as body Bold 700 or an available weighted Kai face; mechanical Chinese bold-oblique is unnecessary.
-- **Disciplinary Italic:** preserve the required Latin or mathematical form for variables, gene symbols, biological names, and other scientific notation. An English italic span does not automatically make its Chinese translation Kai. Apply the source's discipline and citation conventions to journal/book titles and Latin terms.
-- **Sans, monospace, small caps:** use the corresponding text family/role; preserve Latin small caps where present rather than inventing a Chinese equivalent.
+- **常规／正体：**使用常规正文字面。
+- **粗体：**在正文字族内增加字重，不要把每个加粗短语都变成厚重的无衬线标题。
+- **语义性斜体：**中文短语使用直立楷体；楷体出现过于频繁时可用适度加粗。长段落应保持易读的正文字体，不要通篇使用楷体。
+- **粗斜体：**使用更强的中文字重，例如正文粗体 700 或可用的加粗楷体；不必机械地给中文同时加粗和倾斜。
+- **学科惯例中的斜体：**变量、基因符号、生物学名及其他科学记号应保留规定的西文或数学形式。英文片段是斜体，不意味着其中文译文就必须用楷体。期刊名、书名及拉丁术语应遵循原文学科与引文惯例。
+- **无衬线、等宽、小型大写：**使用相应字族或文本角色；已有的西文小型大写应保留，不要凭空创造中文对应形式。
 
-Map Chinese and Latin text separately within mixed spans. A CJK emphasis font must not replace Latin scientific italics or mathematical glyphs.
+在中西文混合片段中分别映射中文和西文字体。CJK 强调字体不能替换西文科学斜体或数学字形。
 
-## Set size and line spacing for the reading conditions
+## 按阅读条件设置字号与行距
 
-| Reading condition | Chinese body size | Line-height/body-size ratio |
+| 阅读条件 | 中文正文字号 | 行高／字号比 |
 | --- | --- | --- |
-| Computer/tablet screen | 16–18 px; start around 17 px | 1.65–1.85; start around 1.75 |
-| Small screen | 15–17 px | 1.6–1.8 |
-| Ordinary print/PDF density | 10.5–11.5 pt | 1.45–1.65 |
-| Compact print/PDF density | 9.5–10.5 pt | 1.35–1.55 |
-| Chinese captions/table notes | About 80%–90% of body size | 1.4–1.6 |
-| Footnotes/reference notes | About 85%–95% of body size | 1.4–1.6 |
+| 电脑／平板屏幕 | 16–18 px；可从约 17 px 开始 | 1.65–1.85；可从约 1.75 开始 |
+| 小屏幕 | 15–17 px | 1.6–1.8 |
+| 普通印刷／PDF 密度 | 10.5–11.5 pt | 1.45–1.65 |
+| 紧凑印刷／PDF 密度 | 9.5–10.5 pt | 1.35–1.55 |
+| 中文图题／表注 | 正文字号的约 80%–90% | 1.4–1.6 |
+| 脚注／参考文献注释 | 正文字号的约 85%–95% | 1.4–1.6 |
 
-For an ordinary Chinese PDF, start with 11 pt body and 17 pt baseline-to-baseline spacing (about 1.55×); 9.5 pt/14.25 pt is a useful caption starting point. For headings and short labels, roughly 1.25–1.45× can be appropriate. These are adjustable defaults, not a requirement to force every caption or table to the same ratio. In TeX, verify the effective baseline spacing rather than assuming a `baselinestretch` multiplier produces the intended ratio.
+普通中文 PDF 可从正文 11 pt、基线间距 17 pt（约 1.55 倍）开始；图题可从字号 9.5 pt、行距 14.25 pt 开始。标题和短标签可采用约 1.25–1.45 倍行高。这些是可调整的默认值，不要求把所有图题或表格强制设为同一比例。在 TeX 中应核验实际基线间距，不能假设设置 `baselinestretch` 倍数就一定得到预期比例。
 
-Inspect the actual visual size: fonts differ at the same nominal size, and serif detail may need the upper end of a range on screen. Accommodate superscripts, subscripts, and inline/display equations without collisions. Preserve readable caption and footnote text instead of shrinking it simply to recover the original page count.
+检查实际视觉大小：相同标称字号下，不同字体的观感不同；屏幕上的衬线细节可能需要采用范围内偏大的字号。为上下标及行内、独立公式留出空间，避免碰撞。保持图题和脚注可读，不要仅为恢复原页数而缩小它们。
 
-For ordinary Chinese prose, start with a first-line indent of two Chinese characters and a modest inter-paragraph gap (for example, 2 pt with the 11/17 pt PDF setting). Follow an explicit user paragraph style if supplied. Treat headings, lists, captions, and a sentence continuing after an equation according to their roles rather than blindly indenting every block. Keep body lines evenly spaced; avoid stretched inter-character gaps caused by long URLs or unbreakable tokens.
+普通中文正文可从首行缩进两个汉字、适度段间距开始（例如 PDF 使用 11/17 pt 设置时，段间距为 2 pt）。若用户明确指定段落样式，则按其要求执行。标题、列表、图题以及公式后接续的句子，应按其作用分别处理，不要盲目给每个内容块加缩进。正文行距保持均匀，避免长 URL 或不可断开的字符串导致字间距被过度拉伸。
 
-## Check the rendered result
+## 检查渲染结果
 
-Check body paragraphs, headings, emphasis, dense captions, table cells, mathematical spans, and page/column transitions at a usable reading scale. Confirm the chosen fonts and weights actually render, Chinese emphasis stays upright, and Latin/scientific italics survive. After size or spacing changes, repair collisions, clipped text, over-wide equations, crowded diagram labels, and awkward split boxes; preserve content and figure/caption associations while allowing more pages. Text extraction and successful compilation supplement this visual check rather than replacing it.
+以适合阅读的比例检查正文段落、标题、强调文字、密集图题、表格单元格、数学片段，以及跨页和跨栏处。确认所选字体及字重确实生效，中文强调保持直立，西文及科学斜体得到保留。调整字号或间距后，修复重叠、文字裁切、过宽公式、拥挤的图内标签及不合理的跨页框体；保留内容和图题对应关系，允许页数增加。文本提取与编译成功只能补充视觉检查，不能取代它。
 
-## Font sources and scope
+## 字体来源与适用边界
 
-Official font projects: [Source Han Serif](https://github.com/adobe-fonts/source-han-serif), [Noto Serif SC](https://fonts.google.com/noto/specimen/Noto+Serif+SC), [Source Han Sans](https://github.com/adobe-fonts/source-han-sans), [Noto Sans SC](https://fonts.google.com/noto/specimen/Noto+Sans+SC), [LXGW WenKai](https://github.com/lxgw/LxgwWenKai), [STIX](https://stixfonts.org/), [Source Sans 3](https://github.com/adobe-fonts/source-sans), [JetBrains Mono](https://www.jetbrains.com/lp/mono/), and [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono).
+官方字体项目：[思源宋体](https://github.com/adobe-fonts/source-han-serif)、[Noto Serif SC](https://fonts.google.com/noto/specimen/Noto+Serif+SC)、[思源黑体](https://github.com/adobe-fonts/source-han-sans)、[Noto Sans SC](https://fonts.google.com/noto/specimen/Noto+Sans+SC)、[霞鹜文楷](https://github.com/lxgw/LxgwWenKai)、[STIX](https://stixfonts.org/)、[Source Sans 3](https://github.com/adobe-fonts/source-sans)、[JetBrains Mono](https://www.jetbrains.com/lp/mono/) 和 [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono)。
 
-[W3C Chinese Layout Requirements](https://www.w3.org/TR/clreq/) provides broader Chinese typesetting context. The numerical ranges here are reading recommendations supplied for this skill, not requirements attributed to W3C. These links identify resources; they do not require fetching fonts for every translation.
+[W3C《中文排版需求》](https://www.w3.org/TR/clreq/) 提供更广泛的中文排版背景。此处数值范围是为本技能提供的阅读建议，并非归属于 W3C 的规范要求。这些链接仅用于标识资源，不要求每次翻译都下载字体。

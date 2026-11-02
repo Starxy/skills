@@ -1,6 +1,6 @@
-"""Generate an original two-page layout fixture, not a PDF extraction pipeline.
-Requires existing reportlab, Pillow, and system DejaVu Sans fonts. Run: python make_fixture.py [output.pdf]
-Page 2 is deliberately image-only. No network or external content is used.
+"""生成原创的两页版式测试样本；这不是 PDF 提取流程。
+需要环境中已有 reportlab、Pillow 和系统 DejaVu Sans 字体。运行：python make_fixture.py [output.pdf]
+第 2 页刻意仅含图像。不使用网络或外部内容。
 """
 from io import BytesIO
 from pathlib import Path
@@ -12,7 +12,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
 out = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).with_name('layout.pdf')
-# Embedded fonts keep the synthetic layout stable without renderer font substitution.
+# 嵌入字体，避免渲染器替换字体，保持合成样本的版式稳定。
 pdfmetrics.registerFont(TTFont('Fixture', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'))
 pdfmetrics.registerFont(TTFont('FixtureBold', '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'))
 c = canvas.Canvas(str(out), pagesize=(595, 842), invariant=1)
@@ -52,7 +52,7 @@ text(42, 96, ['[1] Timing excludes initialization.'], 9)
 text(42, 49, ['Synthetic running footer - not body prose'], 9)
 text(540, 49, ['1'], 9)
 c.showPage()
-# Raster text deliberately removes an extractable text layer from the appendix.
+# 将文字栅格化，刻意去除附录中可提取的文本层。
 im = Image.new('RGB', (1190, 1684), 'white')
 d = ImageDraw.Draw(im)
 font = ImageFont.load_default(size=23)

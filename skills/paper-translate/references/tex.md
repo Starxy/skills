@@ -1,31 +1,31 @@
-# arXiv and TeX projects
+# arXiv 与 TeX 项目
 
-## Lock and inspect
+## 锁定版本并检查
 
-The usual arXiv input is the supplied TeX project. Use that project and its version evidence first; do not download the latest source or replace local files by default. Record the requested identifier and explicit `vN`, distinguishing a verified version from an unknown or user-declared one. Only when acquisition is requested and no source is supplied, resolve the specified version (or select and record an available version if unspecified). Source, PDF, HTML, figures, and any supplement must correspond to that version; never silently substitute a newer one. Record the actual license source or that it is unknown, not a blanket “arXiv is CC BY.”
+通常使用用户提供的 arXiv TeX 项目。优先使用该项目及其版本证据，默认不下载最新源文件，也不替换本地文件。记录用户要求的标识符及明确的 `vN`，区分已核验版本、未知版本与用户声明的版本。只有用户要求获取且未提供源文件时，才解析指定版本；未指定版本时，选择并记录一个可用版本。源文件、PDF、HTML、图片及任何补充材料必须对应同一版本，绝不能悄悄替换为更新版本。记录实际许可证来源，或明确标为未知，不要笼统声称“arXiv 都是 CC BY”。
 
-Inspect archives before extraction. Use a fresh destination and reject absolute paths, parent traversal, symlinks/hardlinks, device files, duplicate/overwriting destinations, and members resolving outside the root. Bound member count and expanded sizes; inspect nested archives separately. Do not run included installation/build scripts or fetch their dependencies automatically.
+解压前检查压缩包。使用全新目标目录，拒绝绝对路径、父目录跳转、符号链接或硬链接、设备文件、重复或会覆盖已有内容的目标，以及解析后落在根目录之外的成员。限制成员数量和解压后大小；嵌套压缩包须单独检查。不要运行包内安装或构建脚本，也不要自动获取它们的依赖。
 
-Identify the real document entrypoint from the include graph and document structure, not the first filename containing `documentclass`. Inventory local `input`/`include` files, macros, classes/styles, bibliography or supplied bbl, images, and required engine/fonts. Keep dependencies within the project root; flag missing or external paths. Read source as data at this stage. TeX compilation later expands macros and needs isolation.
+根据包含关系图和文档结构识别真正的文档入口，不能选择第一个含有 `documentclass` 的文件就当作入口。清点本地 `input`/`include` 文件、宏、文档类和样式、参考文献或提供的 bbl、图片，以及所需引擎与字体。将依赖保持在项目根目录内；标明缺失依赖或外部路径。此阶段把源文件作为数据读取。后续 TeX 编译会展开宏，因此需要隔离。
 
-Check the intended engine, Chinese fonts, and isolation route before a long translation. A small self-authored CJK document can expose runtime problems early; it does not validate the paper's packages or layout. Continue translating while recoverable build problems are addressed. Separate trusted toolchain setup from document execution: any authorized provisioning happens before the isolated build, never through a source-supplied script or build-time package downloader.
+长文翻译前先检查计划使用的引擎、中文字体和隔离方式。自行编写一个小型 CJK 文档可提前发现运行环境问题，但不能据此认定论文宏包或版式已经验证。处理可恢复的构建问题时继续翻译。将可信工具链配置与文档执行分开：任何经授权的环境配置都应发生在隔离构建之前，绝不能通过源文件附带脚本或构建时宏包下载器完成。
 
-## Edit a working copy
+## 编辑工作副本
 
-Translate prose in place while preserving structural commands and protected arguments. Captions, theorem/proof prose, algorithm explanations, and human-readable macro arguments still need translation. Protect macro names, signatures, control logic, and mathematical content; translate visible natural language both in definition bodies (for example, a reusable acknowledgment) and in arguments at use sites. Do not freeze whole environments or flatten tables. Preserve escaped characters, math delimiters, comments needed by TeX syntax, and verbatim/listing contents. Review macro boundaries adjoining Chinese text.
+在原位置翻译正文，同时保留结构命令和受保护参数。图题、定理或证明正文、算法说明及供人阅读的宏参数仍须翻译。保护宏名、签名、控制逻辑和数学内容；定义体内可见的自然语言（例如可复用的致谢）以及调用处参数中的自然语言都应翻译。不要冻结整个环境，也不要将表格扁平化。保留转义字符、数学定界符、TeX 语法所需注释，以及 verbatim/listing 内容。复核与中文相邻的宏边界。
 
-Choose an available Chinese-capable engine/font setup (often XeLaTeX or LuaLaTeX). Preserve the original document class, compatible packages, columns, margins, heading hierarchy, and float/caption relationships. Apply [Chinese reading typography](chinese-typography.md) to fonts, emphasis, paragraph indentation, and line spacing; allow repagination at a readable size. Do not replace the class with `ctexart`, add a generic geometry preset, or collapse columns merely for convenience. Keep English bibliography data and citation keys unless the user requests otherwise.
+选择可用且支持中文的引擎与字体配置，通常是 XeLaTeX 或 LuaLaTeX。保留原文档类、兼容宏包、分栏、页边距、标题层级，以及浮动体与图题表题的关系。按[中文阅读排版](chinese-typography.md) 设置字体、强调、段落缩进和行距，允许在可读字号下重新分页。不要仅为方便就替换为 `ctexart`、添加通用 geometry 预设，或将多栏改成单栏。除非用户另有要求，否则保留英文参考文献数据和引用键。
 
-Check effective Latin fonts after switching engines: loading `fontspec` through CJK support can replace the defaults of legacy font packages even when those packages remain in the source. Explicitly select the intended Latin families, whether the original families or the chosen reading combination, and verify both Latin and CJK fonts in the final PDF. Adjust class-level paragraph and size settings where they override the chosen values; define CJK emphasis separately from Latin and mathematical italics.
+切换引擎后检查实际生效的西文字体：通过 CJK 支持加载 `fontspec` 时，即使旧式字体宏包仍留在源文件中，也可能替换其默认字体。明确选择预期西文字族，无论采用原字族还是选定的阅读组合，并在最终 PDF 中验证西文和 CJK 字体。文档类层面的段落和字号设置若覆盖选定值，应进行调整；CJK 强调应与西文、数学斜体分别定义。
 
-## Build safely and verify the actual PDF
+## 安全构建并验证实际 PDF
 
-For a requested PDF, compile in a disposable isolated worker with access only to the project, read-only toolchain/font dependencies, and disposable runtime files; isolate output, remove secrets, disable network, and bound resources/time. A verified OS isolation mechanism is sufficient; a particular container product is not required. Disable shell escape explicitly; `-no-shell-escape` alone is **not** a sandbox because TeX can read/write files and expand untrusted macros. Do not bypass an unavailable isolation boundary by running on an unrestricted host. Do not execute source-supplied scripts, allow document-triggered external commands, or enable automatic package/font installation during the build. Use inspected tooling and report missing dependencies.
+用户要求 PDF 时，在一次性隔离执行环境中编译，只允许访问项目、只读工具链和字体依赖，以及一次性运行时文件；隔离输出、移除机密信息、禁用网络，并限制资源与执行时间。经验证的操作系统隔离机制即可，不要求特定容器产品。明确禁用 shell escape；仅有 `-no-shell-escape` **不等于**沙箱，因为 TeX 能读写文件并展开不可信宏。隔离边界不可用时，不得改在不受限制的宿主机上运行来绕过它。不得执行源文件附带脚本、允许文档触发外部命令，或在构建过程中启用宏包与字体自动安装。使用已检查的工具，并报告缺失依赖。
 
-Run the engine and bibliography/index passes actually required, then resolve references with subsequent passes. Inspect exit status and logs for errors, undefined citations/references, missing glyphs/images, and layout warnings. Repair those affecting readability. Render the resulting PDF and compare source and translated layout at section starts, columns, long equations/tables, figures, notes, and final pages; check Chinese glyphs and overflow; explain the coverage of inspection rather than claiming every page was reviewed if it was not.
+按实际需要运行引擎及参考文献、索引处理，再通过后续编译轮次解析引用。检查退出状态与日志中的错误、未定义引文或引用、缺失字形或图片，以及版式警告。修复影响可读性的问题。渲染生成的 PDF，在章节起始、分栏、长公式或大表格、图片、注释和末尾页面处对比原文与译文版式；检查中文字形和溢出；如实说明检查覆盖范围，未逐页检查时不能声称已检查全部页面。
 
-Also test extraction/search of representative Chinese prose from the final PDF. Correct-looking glyphs can conceal missing Unicode mappings, leaving copied text as glyph IDs or empty text. If extraction fails, cross-check in a reader supporting the font's CID/CMap and report reader-specific limitations. Repair actual font/mapping defects and recheck the PDF; intentional figure/equation images remain separate, disclosed exceptions.
+还要测试最终 PDF 中代表性中文正文的提取与搜索。外观正确的字形可能掩盖 Unicode 映射缺失，导致复制结果是字形 ID 或空文本。如果提取失败，应在支持该字体 CID/CMap 的阅读器中交叉检查，并报告阅读器特有限制。修复实际字体或映射缺陷后重新检查 PDF；有意保留的图片或公式图像仍属于需要单独说明的例外。
 
-Deliver the PDF with a clean rebuildable project: translated TeX, required permitted figures/bibliography/local dependencies, and concise engine/font/build instructions plus meaningful known issues. Verify the package's paths resolve independently of the original workspace. If compilation is blocked, still deliver completed source and useful diagnostics, clearly marking the requested PDF as unfinished. Never relabel an old/source PDF as the translation.
+交付 PDF 及干净、可重新构建的项目：翻译后的 TeX、必要且获准使用的图片、参考文献和本地依赖，以及简明的引擎、字体、构建说明和重要已知问题。验证打包项目中的路径能脱离原工作目录独立解析。如果编译受阻，仍应交付已完成源文件与有用的诊断信息，并明确标注所需 PDF 尚未完成。绝不能将旧 PDF 或原文 PDF 改名冒充译文。
 
-When changing the engine or entrypoint, update the working project's build metadata as well as its prose instructions (for example, `00README.json`'s compiler field). Preserve the original metadata with the untouched source. Verify the advertised build command against the delivered copy; stale pdfLaTeX metadata must not override a tested XeLaTeX/LuaLaTeX setup.
+更改引擎或入口文件时，同时更新工作项目的构建元数据和文字说明，例如 `00README.json` 的 compiler 字段。原始元数据随未修改的原文件保留。针对实际交付副本验证宣称可用的构建命令；过时的 pdfLaTeX 元数据不能覆盖已经测试的 XeLaTeX/LuaLaTeX 配置。
