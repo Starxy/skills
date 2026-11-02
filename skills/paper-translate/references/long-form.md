@@ -3,7 +3,7 @@
 Keep working state alongside the translation, not only in chat memory. Use a simple manifest/table suited to the document; no particular app or schema is required. It needs:
 - Source identity/version and file hashes; requested range and output format.
 - Ordered source block IDs and locations, section/file ownership, type (prose, caption, table, note, equation…), destination, and status: pending, translated, reviewed, or unavailable with reason.
-- A shared terminology list, decisions affecting style/layout, protected material, unresolved source questions, and untranslated exceptions.
+- A shared terminology list, original layout landmarks and necessary CJK adjustments, decisions affecting style/layout, protected material, unresolved source questions, and untranslated exceptions.
 
 Build the source inventory independently of the translated output. For large tables or appendices, track enough detail to detect missing rows/paragraphs rather than treating an entire chapter as one successful block. Protected equations/code count as accounted for, not as translated prose. An omitted source block cannot be discovered by counting only output blocks.
 

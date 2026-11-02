@@ -1,6 +1,6 @@
 # Requested bilingual output
 
-Use the user's layout if specified. Otherwise use A4 landscape, English on the left, Chinese on the right, with a visible central divider. Match title, abstract, and every heading level. Preserve an independent source text; never reconstruct the English from the translation.
+This opt-in layout is an intentional redesign of the parallel output; retain the original-layout default for any separate Chinese-only output. Use the user's layout if specified. Otherwise use A4 landscape, English on the left, Chinese on the right, with a visible central divider. Match title, abstract, and every heading level. Preserve an independent source text; never reconstruct the English from the translation.
 
 Pair source and translation by stable content-block ID. Each paragraph starts beside its counterpart; let the longer side determine the pair's height. For page-spanning pairs, split at corresponding semantic boundaries and mark continuation rather than letting columns drift. Side-by-side pages from two PDFs are not paragraph alignment.
 

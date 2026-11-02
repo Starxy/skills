@@ -1,6 +1,6 @@
 # Design provenance
 
-Reviewed 2026-11-02. This skill and its fixtures are original; no third-party code, templates, or skill text are bundled. These are design comparisons, not runtime dependencies or instructions to install services.
+Reviewed 2026-11-02. This skill and its fixtures are original; no third-party code, templates, or skill text are bundled. These are design comparisons, not runtime dependencies or instructions to install services. The local-snapshot and original-layout defaults take precedence over reader-template or fetch-first conventions in the compared projects.
 
 | Source | Adopted idea / boundary |
 | --- | --- |
