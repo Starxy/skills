@@ -1,0 +1,24 @@
+\section{Method}\label{sec:method}
+We call the hidden variable the latent state. Set $\state=1$ for three trials. A 12.5\% improvement was observed at 20 ms, but not at 10 ms.\footnote{Timing excludes initialization.}
+% This comment is not part of the rendered article.
+
+The error obeys Equation~\ref{eq:bound} only under independent noise.
+\begin{equation}\label{eq:bound}
+e(\state) \leq 0.05
+\end{equation}
+\begin{figure}[ht]
+\centering\fbox{\texttt{Input -> Latent state}}
+\caption{The arrow denotes prediction, not causation.}\label{fig:state}
+\end{figure}
+\begin{table}[ht]\centering
+\begin{tabular}{lr}
+Setting & Error \\
+Independent noise & 0.04 \\
+Dependent noise & 0.12
+\end{tabular}
+\caption{Conditional error.}\label{tab:error}
+\end{table}
+
+As shown in Figure~\ref{fig:state}, this is a sufficient condition, not a necessary condition. See Appendix~\ref{app:limits} and \cite{example2024}.
+
+\paragraph{Algorithm.} Return \texttt{enabled=false} if the threshold is exceeded.

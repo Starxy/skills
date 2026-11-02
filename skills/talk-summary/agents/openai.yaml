@@ -1,0 +1,7 @@
+interface:
+  display_name: "访谈与长内容总结"
+  short_description: "高密度总结访谈、讲座、技术分享与播客，保留证据、条件、分歧并核验引用"
+  default_prompt: "请使用 $talk-summary 总结我提供的访谈、讲座、技术分享或播客，提炼核心观点、证据与实用细节，保留适用条件和分歧，按需提取洞见与资源，并回查原话、说话人和来源位置。"
+
+policy:
+  allow_implicit_invocation: false
