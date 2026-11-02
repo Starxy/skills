@@ -12,7 +12,9 @@ Work in a copy of the original DOM, editing natural-language text nodes and acce
 
 Treat markup as untrusted data: parse without executing source JavaScript; remove active scripts, event handlers, dangerous URL schemes, and active embeds/forms while retaining safe static children and layout where possible. Audit resource references before preview so rendering does not trigger unintended network access. Keep passive data images/fonts; do not treat executable data content as safe solely because it is embedded. If source scripts were required to display content, use the saved static representation or disclose the gap. Any separately chosen trusted math renderer must not silently introduce a network dependency.
 
-Preserve original column/grid relationships, widths, spacing, heading styles, and image/table placement. Apply the smallest CJK font fallback, line-height, wrapping, or overflow changes needed for legibility. Keep useful existing fonts; do not replace the full stylesheet. Text expansion may change height or pagination, so prioritize complete readable content over an impossible pixel match and record significant adjustments.
+Publisher citation/figure links may use JavaScript even when their targets exist in the snapshot. Where a target is unambiguously recoverable from saved IDs, replace the interaction with a native fragment link without evaluating the script. Otherwise retain its visible label and disclose the inactive link. Check these targets after sanitization, not only before it.
+
+Preserve original column/grid relationships, widths, heading hierarchy, and image/table placement. When Chinese text needs font or spacing changes, use [Chinese reading typography](chinese-typography.md), including its screen-reading ranges and emphasis mapping. Scope CSS changes to the relevant article elements, retain useful existing fonts, and preserve the rest of the safe stylesheet. Text expansion may change height or pagination, so prioritize complete readable content over an impossible pixel match and record significant adjustments.
 
 ## Inspect the resulting artifact
 
