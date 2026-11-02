@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage{amsmath}
+\newcommand{\state}{z}
+\newcommand{\ack}{We thank the reviewers for identifying this limitation.}
+\title{A bounded estimator}
+\author{Synthetic Example}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+The latent state is not observed. Error decreases only if noise is independent; this does not establish causation.
+\end{abstract}
+\input{method}
+\appendix
+\section{Limits}\label{app:limits}
+The latent state remains fixed unless an intervention changes it. The bound may fail under dependent noise.
+\begin{verbatim}
+{"latent_state": "z", "threshold": 0.05, "enabled": false}
+\end{verbatim}
+\section*{Acknowledgments}
+\ack
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>A bounded estimator</title></head>
+<body><nav>Browse other articles</nav><article id="paper">
+<h1 id="title">A bounded estimator</h1>
+<section id="abstract"><h2>Abstract</h2>
+<p id="a1">The latent state is not observed. Our estimator reduces error only when the noise is independent; it does not establish causation.</p></section>
+<section id="method"><h2>1. Method</h2>
+<p id="p1">We call the hidden variable the latent state. For <em>three</em> trials, set <code>seed=17</code> and use the bound <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>e</mi><mo>≤</mo><mn>0.05</mn></math>.</p>
+<p id="p2">The latent state remains fixed unless the intervention changes it. A 12.5% improvement was observed at 20 ms, but not at 10 ms.<sup><a id="fnref1" href="#fn1">1</a></sup></p>
+<figure id="fig1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 50" role="img" aria-label="Input and latent state"><rect x="1" y="1" width="158" height="48" fill="none" stroke="black"/><text x="8" y="30">Input → Latent state</text></svg><figcaption>Figure 1. The arrow denotes prediction, not causation.</figcaption></figure>
+<table id="table1"><caption>Table 1. Conditional error.</caption><thead><tr><th>Setting</th><th>Error</th></tr></thead><tbody><tr><td rowspan="2">Independent noise</td><td>0.04</td></tr><tr><td>0.05</td></tr><tr><td>Dependent noise</td><td>0.12</td></tr></tbody></table>
+<pre id="config">{"latent_state": "z", "threshold": 0.05, "enabled": false}</pre>
+<p id="p3">Return <code>enabled=false</code> if the threshold is exceeded. See <a href="#appendix">Appendix A</a>.</p>
+</section><section id="appendix"><h2>Appendix A. Limits</h2><p id="ap1">The bound may fail under dependent noise. This is a sufficient condition, not a necessary condition.</p></section>
+<aside id="fn1"><p>1. Timing excludes initialization. <a href="#fnref1">Back</a></p></aside>
+<section id="references"><h2>References</h2><p id="ref1">Example, A. (2024). A synthetic reference. Test Journal, 1, 1–2.</p></section>
+</article></body></html>
