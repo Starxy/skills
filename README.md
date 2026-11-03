@@ -20,7 +20,7 @@ npx skills add Starxy/skills
 | --- | --- | --- | --- |
 | `asr-polish` | `skills/asr-polish/` | Local | Polish Chinese, English, and mixed-language long-form ASR transcripts, with optional format-matched Chinese translation only when the user explicitly identifies an English-only transcript and requests a translation. |
 | `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
-| `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
+| `paper-pass` | `skills/paper-pass/` | 本地 | 由用户显式调用，接受论文链接、全文或分批全文，按学习依赖、具体演练、设计理由、证据与边界讲懂单篇论文；支持粗读、精读和连续追问。 |
 | `paper-reading-zh` | `skills/paper-reading-zh/` | [`MrGeDiao/paper-reading-zh/paper-reading-zh`](https://github.com/MrGeDiao/paper-reading-zh/tree/main/paper-reading-zh) | Chinese paper reading with paper-type adaptation, brief summaries, deep reading, engineering analysis, comparisons, and evidence audits. |
 | `paper-translate` | `skills/paper-translate/` | 本地 | 将用户提供的 SingleFile HTML、arXiv TeX 或 PDF 翻译为中文，尽量保留原版式，检查内容覆盖情况，并按需提供双语对照版本。 |
 | `rss-curate-ai-news` | `skills/rss-curate-ai-news/` | Local | User-invoked FreshRSS curation that builds beginner-friendly AI learning paths and supports trend, business, and project decisions with configurable channels, time ranges, and Top K. |
