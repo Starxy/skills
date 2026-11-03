@@ -19,13 +19,10 @@ npx skills add Starxy/skills
 | Skill | Path | Source | Description |
 | --- | --- | --- | --- |
 | `asr-polish` | `skills/asr-polish/` | Local | Polish Chinese, English, and mixed-language long-form ASR transcripts, with optional format-matched Chinese translation only when the user explicitly identifies an English-only transcript and requests a translation. |
-| `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
 | `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
-| `paper-reading-zh` | `skills/paper-reading-zh/` | [`MrGeDiao/paper-reading-zh/paper-reading-zh`](https://github.com/MrGeDiao/paper-reading-zh/tree/main/paper-reading-zh) | Chinese paper reading with paper-type adaptation, brief summaries, deep reading, engineering analysis, comparisons, and evidence audits. |
 | `paper-translate` | `skills/paper-translate/` | 本地 | 将用户提供的 SingleFile HTML、arXiv TeX 或 PDF 翻译为中文，尽量保留原版式，检查内容覆盖情况，并按需提供双语对照版本。 |
 | `rss-curate-ai-news` | `skills/rss-curate-ai-news/` | Local | User-invoked FreshRSS curation that builds beginner-friendly AI learning paths and supports trend, business, and project decisions with configurable channels, time ranges, and Top K. |
 | `talk-summary` | `skills/talk-summary/` | Local | Summarize interviews, lectures, technical talks, and podcasts with dense, traceable takeaways, preserving evidence, conditions, disagreement, practical details, and verified quotations. |
-| `ultragoal` | `skills/ultragoal/` | [`jxnl/dots/agents/skills/ultragoal`](https://github.com/jxnl/dots/tree/master/agents/skills/ultragoal) | Design, critique, set, create, activate, or run durable Codex goals for persistent or long-running objectives. |
 | `zotero-library` | `skills/zotero-library/` | Local | Search and manage Zotero user/group libraries, synced full text, notes, annotations, attachments, exports, and sync data through the official Web API using Python. |
 
 ## Repository Layout
@@ -95,10 +92,10 @@ the real CLI after at least one skill exists.
 From GitHub, install a specific skill by name:
 
 ```bash
-npx skills add Starxy/skills --skill ultragoal --agent codex
+npx skills add Starxy/skills --skill paper-pass --agent codex
 ```
 
-Replace `ultragoal` with another skill name from the catalog when needed. To
+Replace `paper-pass` with another skill name from the catalog when needed. To
 install every skill from this repository for Codex:
 
 ```bash
@@ -108,7 +105,7 @@ npx skills add Starxy/skills --skill '*' --agent codex -y
 From a local checkout:
 
 ```bash
-npx skills add . --skill ultragoal --agent codex
+npx skills add . --skill paper-pass --agent codex
 ```
 
 Use `--copy` if symlinks are not desirable on the target machine. Use
