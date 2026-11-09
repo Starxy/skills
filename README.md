@@ -18,6 +18,7 @@ npx skills add Starxy/skills
 
 | Skill | Path | Source | Description |
 | --- | --- | --- | --- |
+| `anti-defensive-writing` | `skills/anti-defensive-writing/` | Local | 减少防御性写作，按科研阶段组织论文、研究方案、实验报告与阶段汇报。 |
 | `asr-polish` | `skills/asr-polish/` | Local | Polish Chinese, English, and mixed-language long-form ASR transcripts, with optional format-matched Chinese translation only when the user explicitly identifies an English-only transcript and requests a translation. |
 | `karpathy-guidelines` | `skills/karpathy-guidelines/` | [`multica-ai/andrej-karpathy-skills/skills/karpathy-guidelines`](https://github.com/multica-ai/andrej-karpathy-skills/tree/main/skills/karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes. |
 | `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
