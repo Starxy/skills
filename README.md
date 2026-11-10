@@ -18,6 +18,7 @@ npx skills add Starxy/skills
 
 | Skill | Path | Source | Description |
 | --- | --- | --- | --- |
+| `anti-defensive-writing` | `skills/anti-defensive-writing/` | Local | 减少防御性写作，按科研阶段组织论文、研究方案、实验报告与阶段汇报。 |
 | `asr-polish` | `skills/asr-polish/` | Local | Polish Chinese, English, and mixed-language long-form ASR transcripts, with optional format-matched Chinese translation only when the user explicitly identifies an English-only transcript and requests a translation. |
 | `paper-pass` | `skills/paper-pass/` | Local | User-invoked first-pass reading for a complete single paper, focused on motivation, core ideas, contributions, evidence, and boundaries. |
 | `paper-translate` | `skills/paper-translate/` | 本地 | 将用户提供的 SingleFile HTML、arXiv TeX 或 PDF 翻译为中文，尽量保留原版式，检查内容覆盖情况，并按需提供双语对照版本。 |
