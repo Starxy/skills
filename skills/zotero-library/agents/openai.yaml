@@ -1,7 +1,7 @@
 interface:
   display_name: "Zotero Library"
-  short_description: "Automate Zotero library CRUD with pyzotero."
-  default_prompt: "Use $zotero-library to query and update my Zotero literature library with pyzotero."
+  short_description: "Manage Zotero libraries through the official Web API."
+  default_prompt: "Use $zotero-library to search, read, organize, and update my Zotero library through the official Web API."
 
 policy:
   allow_implicit_invocation: false

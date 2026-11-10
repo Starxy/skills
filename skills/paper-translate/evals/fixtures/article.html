@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- Synthetic SingleFile-style snapshot for offline tests; not an extension export.
+     Original URL (provenance only): https://example.invalid/synthetic-paper -->
+<html lang="en"><head><meta charset="utf-8"><title>A bounded estimator</title><meta name="saved-from-url" content="https://example.invalid/synthetic-paper">
+<style id="original-layout">
+* { box-sizing: border-box; }
+body { margin: 0; background: #edf0f4; color: #203040; font-family: Georgia, serif; }
+nav { max-width: 980px; margin: 18px auto; font: 14px sans-serif; }
+article { max-width: 980px; margin: 0 auto 32px; padding: 36px 42px; background: white; border-top: 6px solid #315c79; }
+h1 { font-size: 32px; margin: 0 0 24px; }
+h2 { font-size: 20px; color: #315c79; margin: 24px 0 12px; }
+p { line-height: 1.55; margin: 0 0 16px; }
+#abstract { border-left: 3px solid #8099aa; padding: 0 20px; margin-bottom: 24px; }
+#method { column-count: 2; column-gap: 32px; column-rule: 1px solid #c6d0d8; }
+#method > h2 { column-span: all; }
+figure, table, pre { break-inside: avoid; }
+figure { margin: 18px 0; padding: 12px; background: #f2f5f8; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption, caption { font-size: 14px; line-height: 1.5; text-align: left; }
+table { border-collapse: collapse; width: 100%; margin: 18px 0; }
+th, td { border: 1px solid #9fadb8; padding: 6px; text-align: left; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #edf0f4; padding: 10px; }
+aside { border-top: 1px solid #8099aa; font-size: 13px; margin-top: 24px; }
+#references { font-size: 13px; }
+@media (max-width: 680px) { article { padding: 20px; } #method { column-count: 1; } }
+</style></head>
+<body><nav>Browse other articles</nav><article id="paper">
+<h1 id="title">A bounded estimator</h1>
+<section id="abstract"><h2>Abstract</h2>
+<p id="a1">The latent state is not observed. Our estimator reduces error only when the noise is independent; it does not establish causation.</p></section>
+<section id="method"><h2>1. Method</h2>
+<p id="p1">We call the hidden variable the latent state. For <em>three</em> trials, set <code>seed=17</code> and use the bound <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>e</mi><mo>≤</mo><mn>0.05</mn></math>.</p>
+<p id="p2">The latent state remains fixed unless the intervention changes it. A 12.5% improvement was observed at 20 ms, but not at 10 ms.<sup><a id="fnref1" href="#fn1">1</a></sup></p>
+<figure id="fig1"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgNTAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iSW5wdXQgYW5kIGxhdGVudCBzdGF0ZSI+PHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjE1OCIgaGVpZ2h0PSI0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIvPjx0ZXh0IHg9IjgiIHk9IjMwIj5JbnB1dCDihpIgTGF0ZW50IHN0YXRlPC90ZXh0Pjwvc3ZnPg==" width="160" height="50" alt="Input and latent state"><figcaption>Figure 1. The arrow denotes prediction, not causation.</figcaption></figure>
+<table id="table1"><caption>Table 1. Conditional error.</caption><thead><tr><th>Setting</th><th>Error</th></tr></thead><tbody><tr><td rowspan="2">Independent noise</td><td>0.04</td></tr><tr><td>0.05</td></tr><tr><td>Dependent noise</td><td>0.12</td></tr></tbody></table>
+<pre id="config">{"latent_state": "z", "threshold": 0.05, "enabled": false}</pre>
+<p id="p3">Return <code>enabled=false</code> if the threshold is exceeded. See <a href="#appendix">Appendix A</a>.</p>
+</section><section id="appendix"><h2>Appendix A. Limits</h2><p id="ap1">The bound may fail under dependent noise. This is a sufficient condition, not a necessary condition.</p></section>
+<aside id="fn1"><p>1. Timing excludes initialization. <a href="#fnref1">Back</a></p></aside>
+<section id="references"><h2>References</h2><p id="ref1">Example, A. (2024). A synthetic reference. Test Journal, 1, 1–2.</p></section>
+</article></body></html>

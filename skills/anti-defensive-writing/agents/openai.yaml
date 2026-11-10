@@ -1,0 +1,13 @@
+interface:
+  display_name: 科研写作与阶段汇报
+  short_description: 按科研阶段组织贡献、实验与汇报，减少防御性表达和过度验证要求
+  default_prompt: 使用 $anti-defensive-writing，根据当前写作场景和科研阶段改写材料，突出有证据的贡献，并保留影响判断的事实。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
