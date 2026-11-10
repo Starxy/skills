@@ -62,7 +62,7 @@ $rss-curate-ai-news 从频道“<精确频道名>”筛选最近 24 小时的 AI
 
 ### PPT 与逐字稿制作
 
-`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。新建 PPT 默认使用 [worldmodels 模板](skills/ppt-craft/references/worldmodels-style.md)，用户明确指定的其他样式优先；修改既有文件时保留已确认样式。正文采用正式、客观的书面表达，与逐字稿分离，不默认添加页底总结或套用固定要点数量。生成前检查大纲，生成后逐页检查可见文字与布局，修改问题并复查后交付。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
+`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。新建 PPT 默认使用 [学术蓝模板](skills/ppt-craft/references/academic-blue-style.md)，附带 [16 页可编辑 PPTX](skills/ppt-craft/assets/academic-blue-template.pptx) 和 [版式预览](skills/ppt-craft/assets/academic-blue-preview.png)；用户明确指定的其他样式优先，修改既有文件时保留已确认样式。正文采用正式、客观的书面表达，与逐字稿分离，不默认添加页底总结或套用固定要点数量。生成前检查大纲，生成后逐页检查可见文字与布局，修改问题并复查后交付。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
 
 ```bash
 npx skills add Starxy/skills --skill ppt-craft --agent codex
