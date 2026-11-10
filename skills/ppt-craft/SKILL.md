@@ -25,7 +25,7 @@ description: 设计和修改讲座、课程及汇报 PPT，组织内容、排版
 | 制作页面、改版式、选择或处理图表 | [页面与图表](references/visual-design.md) | 屏幕应展示什么，怎样让对象、关系和证据可读 |
 | 配逐字稿、修改试讲稿、写入或清理备注 | [逐字稿与备注](references/speaker-notes.md) | 怎样连续讲清，口播与查证信息分别放在哪里 |
 | 修改既有文件，或交付 PPT、独立讲稿等文件 | [修改与交付](references/revision-delivery.md) | 怎样保留手改内容，并检查实际交付物 |
-| 使用默认模板制作页面 | [学术蓝默认模板](references/academic-blue-style.md) | 如何使用附带的 PPTX 参考页，采用哪些配色、字体、标点和脚注约定 |
+| 使用默认模板制作页面 | [学术蓝默认模板](references/academic-blue-style.md) | 依据独立文字规范确定配色、字体、版式、图表与脚注；PPTX 仅提供可选示意 |
 
 ## 从当前阶段推进
 
