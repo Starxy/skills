@@ -1,0 +1,6 @@
+interface:
+  display_name: "PPT 内容与讲稿制作"
+  short_description: "组织讲座与汇报内容，设计页面与图表，编写自然逐字稿并检查正式文件"
+  default_prompt: "请使用 $ppt-craft，依据所附材料和听众背景，完成本次 PPT 内容、排版或逐字稿任务，并检查交付文件。"
+policy:
+  allow_implicit_invocation: false

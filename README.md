@@ -1,6 +1,6 @@
 # Starxy Skills
 
-用于论文阅读与翻译、长内容整理、科研写作、AI 新闻策展和 Zotero 文献管理的 Agent Skills 合集。每个技能以 `SKILL.md` 保存执行说明，并按需附带脚本、参考文档和资源，可通过 [Skills CLI](https://github.com/vercel-labs/skills) 安装。
+用于论文阅读与翻译、长内容整理、科研写作、PPT 与逐字稿制作、AI 新闻策展和 Zotero 文献管理的 Agent Skills 合集。每个技能以 `SKILL.md` 保存执行说明，并按需附带脚本、参考文档和资源，可通过 [Skills CLI](https://github.com/vercel-labs/skills) 安装。
 
 ## 技能目录
 
@@ -10,6 +10,7 @@
 | [asr-polish](skills/asr-polish/SKILL.md) | 将中文、英文及混合语言的长篇 ASR 转写整理为完整阅读稿；明确声明全英文并要求译稿时，另附中文翻译。 |
 | [paper-pass](skills/paper-pass/SKILL.md) | 分三阶段初读单篇论文，提取逐节核心观点，重构研究思路，说明贡献与局限。 |
 | [paper-translate](skills/paper-translate/SKILL.md) | 将 SingleFile HTML、arXiv TeX 或 PDF 翻译为中文，尽量保留原版式，按需提供双语对照。 |
+| [ppt-craft](skills/ppt-craft/SKILL.md) | 设计讲座、课程与汇报 PPT，组织内容、排版图表、编写逐字稿，保护手改内容并检查实际交付文件。 |
 | [rss-curate-ai-news](skills/rss-curate-ai-news/SKILL.md) | 从 FreshRSS 按指定频道、时间范围和 Top K 策展 AI 新闻，生成短评、学习卡与决策卡。 |
 | [talk-summary](skills/talk-summary/SKILL.md) | 总结访谈、讲座、技术分享与播客，保留论点、条件、分歧和实用细节，并核对引用的原话。 |
 | [zotero-library](skills/zotero-library/SKILL.md) | 通过 Zotero 官方 Web API 搜索与管理个人库、群组库，以及笔记、标签、分类和已同步附件。 |
@@ -46,6 +47,8 @@ $paper-pass 阅读这篇论文，说明逐节核心观点、研究思路和贡�
 
 $asr-polish 将下面的转写整理为完整阅读稿，保留说话人和已有时间戳：<转写文本>
 
+$ppt-craft 根据所附材料制作一场 30 分钟的学术讲座，面向有机器学习基础的听众，完成 PPT 与逐字稿。
+
 $rss-curate-ai-news 从频道“<精确频道名>”筛选最近 24 小时的 AI 新闻，Top K 为 3。
 ```
 
@@ -56,6 +59,22 @@ $rss-curate-ai-news 从频道“<精确频道名>”筛选最近 24 小时的 AI
 - **论文翻译**：提取、编译与排版工具随 HTML、TeX、PDF 输入格式而变化，见技能内的对应格式说明。
 
 各技能的完整输入要求、工具依赖和操作规则见目录链接中的 `SKILL.md`。
+
+### PPT 与逐字稿制作
+
+`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。内容设计、页面图表、逐字稿、修改交付分别按任务读取；世界模型讲座的样式仅在明确沿用时启用。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
+
+```bash
+npx skills add Starxy/skills --skill ppt-craft --agent codex
+```
+
+```text
+$ppt-craft 只修改这份 Markdown 逐字稿，使解释自然连贯；保留补充讲述，删除参考资料，PPT 不变。
+
+$ppt-craft 以我最新手改的 PPT 为基础，调整第三章的图文排版并同步该章备注，沿用世界模型讲座风格。
+```
+
+该技能整理自《PPT 逐字稿编写规范》《PPT 内容排版与风格要求》和《AI 协作反复修改的复盘与执行约定》。编写时参考了 [AI Hero：Writing for Agents](https://www.aihero.dev/skills-writing-for-agents)、[OpenAI：Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)、[GPT-6 家族提示词指南](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol#prompting-best-practices)和 [Build skills](https://developers.openai.com/plugins/build/skills)，采用简短入口、按任务读取、明确完成条件与适度自主执行。参考核查日期：2026-11-10。家族指南覆盖 GPT-6.1，其中的提示词建议以 Astra 的行为观察为基础，仍需在所用模型与具体任务上检验。
 
 ## 仓库结构
 
