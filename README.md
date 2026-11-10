@@ -62,7 +62,7 @@ $rss-curate-ai-news 从频道“<精确频道名>”筛选最近 24 小时的 AI
 
 ### PPT 与逐字稿制作
 
-`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。内容设计、页面图表、逐字稿、修改交付分别按任务读取；世界模型讲座的样式仅在明确沿用时启用。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
+`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。新建 PPT 默认使用 [worldmodels 模板](skills/ppt-craft/references/worldmodels-style.md)，用户明确指定的其他样式优先；修改既有文件时保留已确认样式。正文采用正式、客观的书面表达，与逐字稿分离，不默认添加页底总结或套用固定要点数量。生成前检查大纲，生成后逐页检查可见文字与布局，修改问题并复查后交付。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
 
 ```bash
 npx skills add Starxy/skills --skill ppt-craft --agent codex
@@ -71,7 +71,7 @@ npx skills add Starxy/skills --skill ppt-craft --agent codex
 ```text
 $ppt-craft 只修改这份 Markdown 逐字稿，使解释自然连贯；保留补充讲述，删除参考资料，PPT 不变。
 
-$ppt-craft 以我最新手改的 PPT 为基础，调整第三章的图文排版并同步该章备注，沿用世界模型讲座风格。
+$ppt-craft 以我最新手改的 PPT 为基础，调整第三章的图文排版并同步该章备注，保留现有样式。
 ```
 
 该技能整理自《PPT 逐字稿编写规范》《PPT 内容排版与风格要求》和《AI 协作反复修改的复盘与执行约定》。编写时参考了 [AI Hero：Writing for Agents](https://www.aihero.dev/skills-writing-for-agents)、[OpenAI：Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)、[GPT-6 家族提示词指南](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol#prompting-best-practices)和 [Build skills](https://developers.openai.com/plugins/build/skills)，采用简短入口、按任务读取、明确完成条件与适度自主执行。参考核查日期：2026-11-10。家族指南覆盖 GPT-6.1，其中的提示词建议以 Astra 的行为观察为基础，仍需在所用模型与具体任务上检验。
