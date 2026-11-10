@@ -39,7 +39,7 @@ npx skills add Starxy/skills --list
 
 ## 使用
 
-本仓库的所有技能（包括仓库维护技能）均配置为仅由用户显式调用。安装后，在 Codex 的请求中写明 `$技能名`，例如：
+`anti-defensive-writing` 允许隐式调用，智能体可在任务符合其描述时选择使用；其他技能（包括仓库维护技能）仍配置为仅由用户显式调用。所有技能都支持显式调用：在 Codex 的请求中写明 `$技能名`，例如：
 
 ```text
 $paper-pass 阅读这篇论文，说明逐节核心观点、研究思路和贡献边界：<论文链接>
@@ -96,7 +96,7 @@ disable-model-invocation: true
 写明所需材料、执行步骤和预期输出。
 ```
 
-同时创建 `skills/my-skill/agents/openai.yaml`，保留本仓库的显式调用策略：
+同时创建 `skills/my-skill/agents/openai.yaml`。新技能默认采用显式调用：
 
 ```yaml
 policy:

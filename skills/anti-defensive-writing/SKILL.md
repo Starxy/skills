@@ -1,6 +1,5 @@
 ---
 name: anti-defensive-writing
-disable-model-invocation: true
 description: 减少防御性写作，按科研阶段组织贡献与证据。用于起草或修改论文、研究方案、实验报告、组会与阶段汇报，以及精简技术或专业文本中的预防性辩解。
 ---
 
