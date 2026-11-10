@@ -1,9 +1,9 @@
 # Zotero Web API implementation notes
 
 The runtime uses Python's standard library and `https://api.zotero.org`, with
-`Zotero-API-Version: 3`. It does not import the upstream MCP implementation.
+`Zotero-API-Version: 3`.
 
-## Sources
+## API documentation
 
 - [Read requests, filters, exports and pagination](https://www.zotero.org/support/dev/web_api/v3/basics)
 - [Write requests, versions and multi-object responses](https://www.zotero.org/support/dev/web_api/v3/write_requests)
@@ -12,7 +12,6 @@ The runtime uses Python's standard library and `https://api.zotero.org`, with
 - [Incremental syncing](https://www.zotero.org/support/dev/web_api/v3/syncing)
 - [Official new-item templates](https://api.zotero.org/items/new?itemType=journalArticle)
 - [Official annotation template](https://api.zotero.org/items/new?itemType=annotation&annotationType=highlight)
-- [Reference feature inventory](https://github.com/54yyyu/zotero-mcp/blob/main/docs/tools.md)
 
 ## Routes and invariants
 
@@ -110,9 +109,9 @@ text offsets. `pageIndex` is zero-based; labels shown to humans can differ.
 Use `annotationSortIndex` when known. This implementation creates/updates synced
 native annotation records; it does not calculate positions or edit PDF bytes.
 
-## Comparison with zotero-mcp
+## Capabilities and limitations
 
-| Reference capability | This skill's implementation |
+| Capability | Implementation or limitation |
 | --- | --- |
 | Keyword, tag, recent, collection search | Native API reads and filters |
 | Advanced search | Explicit local metadata predicates over paged official records |
@@ -126,7 +125,7 @@ native annotation records; it does not calculate positions or edit PDF bytes.
 | Annotation synthesis | Source digest grouped by paper; explanation remains agent work |
 | Personal/group libraries | Native groups listing and per-command ID/type overrides |
 | Sync administration | Native object/full-text version maps and deletion logs |
-| Semantic search | Excluded by user request |
+| Semantic search | Not implemented |
 | PDF outlines, page images/layout, automatic highlight placement | Excluded; not native Web API operations |
 | DOI/ISBN/URL metadata enrichment, OA discovery, OpenAlex, Scite | Excluded; require external providers |
 | Desktop RSS, reader UI, local write authorization | Excluded; desktop/local features |

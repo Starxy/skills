@@ -74,8 +74,6 @@ $ppt-craft 只修改这份 Markdown 逐字稿，使解释自然连贯；保留�
 $ppt-craft 以我最新手改的 PPT 为基础，调整第三章的图文排版并同步该章备注，保留现有样式。
 ```
 
-该技能整理自《PPT 逐字稿编写规范》《PPT 内容排版与风格要求》和《AI 协作反复修改的复盘与执行约定》。编写时参考了 [AI Hero：Writing for Agents](https://www.aihero.dev/skills-writing-for-agents)、[OpenAI：Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)、[GPT-6 家族提示词指南](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6.1-sol#prompting-best-practices)和 [Build skills](https://developers.openai.com/plugins/build/skills)，采用简短入口、按任务读取、明确完成条件与适度自主执行。参考核查日期：2026-11-10。家族指南覆盖 GPT-6.1，其中的提示词建议以 Astra 的行为观察为基础，仍需在所用模型与具体任务上检验。
-
 ## 仓库结构
 
 ```text
@@ -94,6 +92,8 @@ $ppt-craft 以我最新手改的 PPT 为基础，调整第三章的图文排版�
 ```
 
 ## 新增与维护技能
+
+仓库统一的技能编写、资源组织与验证要求见 [AGENTS.md](AGENTS.md#技能编写与维护)。
 
 在仓库根目录创建技能：
 

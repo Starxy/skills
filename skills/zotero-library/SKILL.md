@@ -72,7 +72,7 @@ python $Z search "attention" --limit 10 --detail keys_only
 - **去重**：`find-duplicates` 比较官方元数据；`merge-duplicates KEEP OTHER...` 通过普通 API 写入合并字段、标签、集合和子项，并把重复父项移入回收站。它是客户端组合操作，跨多条请求不具备事务性；检查部分失败及保留的字段冲突。
 - **同步**：`changes --since VERSION`（兼容名 `sync`）返回变更版本和删除记录；它不触发桌面同步，也不自动下载所有变更对象。保存下一 checkpoint 前需获取对象、应用删除，并检查各端点版本一致。
 
-完整参数、写入示例和常见失败见 [commands.md](references/commands.md)。需要修改 HTTP 行为、了解实际 API 路由或判断与 zotero-mcp 的能力差异时，读 [web-api.md](references/web-api.md)。
+完整参数、写入示例和常见失败见 [commands.md](references/commands.md)。需要修改 HTTP 行为、了解实际 API 路由或确认能力与限制时，读 [web-api.md](references/web-api.md)。
 
 ## 能力边界
 
