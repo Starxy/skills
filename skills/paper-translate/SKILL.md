@@ -20,7 +20,7 @@ description: 将用户提供的 SingleFile HTML、arXiv TeX 或 PDF 忠实翻译
 - **SingleFile HTML/HTM（或仅提供 URL 的请求）：**[HTML 工作流程](references/html.md)。
 - **arXiv 源码或 TeX 工程：**[TeX 工作流程](references/tex.md)，包括版本锁定和安全编译。
 - **仅有 PDF：**[PDF 处理方案](references/pdf.md)。
-- **中文 PDF 排版，或 HTML 字体/间距调整：**[中文阅读排版](references/chinese-typography.md)，包括字体、强调、段落样式和阅读密度建议。
+- **初次确定或调整中文 PDF 排版、HTML 字体/间距，或复用用户指定的成品样式：**[中文阅读排版](references/chinese-typography.md)，包括成品样式的复用、字族/字重、字号与实际行距的核对。
 - **要求双语对照：**另读[双语版式](references/bilingual.md)。
 - **多章节任务或“继续”请求：**另读[覆盖检查与续译](references/long-form.md)。
 
