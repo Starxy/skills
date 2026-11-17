@@ -62,7 +62,7 @@ $rss-curate-ai-news 从频道“<精确频道名>”筛选最近 24 小时的 AI
 
 ### PPT 与逐字稿制作
 
-`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。技能主体聚焦 PPT 制作逻辑、各章节内容深度、理解推进链条、屏幕完整书面长句与自然口语逐字稿分工、禁止防御性写作表述，以及原图优先、图文互补等全局图文/图表混排原则。样式与内容逻辑解耦：用户提供模板或修改既有 PPT 时直接沿用其模板与样式；未指定样式时默认采用[学术蓝默认模板](skills/ppt-craft/references/academic-blue-style.md)（包含具体色值、微软雅黑与 Times New Roman 字体配对、顶部左对齐章节栏配居中带下划线核心标题、蓝顶细框卡片及左下角按需文献脚注等版式细则）。附带的 [16 页组会示例 PPTX](skills/ppt-craft/assets/academic-blue-template.pptx) 和 [版式预览](skills/ppt-craft/assets/academic-blue-preview.png) 以 *Attention Is All You Need*（`arXiv:1706.03762`）为例示范学术蓝的视觉风格与常见版式，制作实际 PPT 时仅参考风格与版式，不拘泥于示例的章节与固定内容。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
+`ppt-craft` 支持新建内容、重构章节、按默认或指定风格重构既有 PPT、页面排版，以及按需编写逐字稿或备注（除非明确说明，默认只交付 PPT 页面，不生成逐字稿和演讲者备注）。技能主体聚焦 PPT 制作逻辑、各章节内容深度、理解推进链条、屏幕完整书面长句、专业 LaTeX 数学公式、禁止防御性写作表述，以及原图优先、按需调用图片生成制作学术插画、区分核心数据图表与背景配图的全局混排原则（逐字稿仅解说结果图、总结表、流程图与方法图，不解释背景配图与插画）。样式与内容逻辑解耦：用户提供模板或要求保留原样式时沿用其样式；未指定样式或明确要求按默认学术蓝风格修改既有 PPT 时，采用[学术蓝默认模板](skills/ppt-craft/references/academic-blue-style.md)对页面进行构建或彻底重构。附带的 [16 页组会示例 PPTX](skills/ppt-craft/assets/academic-blue-template.pptx) 和 [版式预览](skills/ppt-craft/assets/academic-blue-preview.png) 以 *Attention Is All You Need*（`arXiv:1706.03762`）为例示范学术蓝的视觉风格与常见版式，制作实际 PPT 时仅参考风格与版式，不拘泥于示例的章节与固定内容。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
 
 ```bash
 npx skills add Starxy/skills --skill ppt-craft --agent codex
