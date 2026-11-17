@@ -62,7 +62,7 @@ $rss-curate-ai-news 从频道“<精确频道名>”筛选最近 24 小时的 AI
 
 ### PPT 与逐字稿制作
 
-`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。新建 PPT 默认依据[学术蓝文字规范](skills/ppt-craft/references/academic-blue-style.md)制作：蓝色背景使用 `#245A8C`，页标题使用 `#1F4E79`，正文以黑色为主，少量强调使用 `#C00000`；章节栏内居中白字，页标题左对齐，无需依赖 PPTX。附带的 [16 页 PPTX](skills/ppt-craft/assets/academic-blue-template.pptx) 和 [版式预览](skills/ppt-craft/assets/academic-blue-preview.png) 仅作示意，包含科学插画配文、原图展示、流程、公式和表格等布局。中文使用微软雅黑，英文、数字和符号使用 Times New Roman；已有图表优先采用原图、原表或清晰截图，保留其原貌。用户明确指定的其他样式优先，修改既有文件时保留已确认样式。正文采用正式、客观的书面表达，与逐字稿分离，不默认添加页底总结或套用固定要点数量。生成前检查大纲，生成后逐页检查可见文字与布局，修改问题并复查后交付。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
+`ppt-craft` 支持新建内容、重构章节、既有 PPT 配稿、页面排版，以及只修改备注或独立讲稿。新建 PPT 默认依据[学术蓝默认模板](skills/ppt-craft/references/academic-blue-style.md)制作：沿用 `#245A8C` / `#1F4E79` / `#EFF4F9` 学术蓝配色及原有封面、目录、章节首页和结束页版式；内容页顶部蓝栏左对齐放章节名，其下居中放置一句带下划线的核心标题，正文多用卡片或分栏配合完整书面长句，只在需要注明他人出处时于左下角加文献脚注。附带的 [16 页组会示例 PPTX](skills/ppt-craft/assets/academic-blue-template.pptx) 和 [版式预览](skills/ppt-craft/assets/academic-blue-preview.png) 以 *Attention Is All You Need*（`arXiv:1706.03762`）为例示范风格与常见版式（原图配文、机制对比卡片、公式与变量表、原生实验图表、消融表、可视化对照与讨论页等），制作实际 PPT 时仅参考风格与版式，不拘泥于示例的章节与固定内容。中文使用微软雅黑，英文、数字和符号使用 Times New Roman；已有图表优先采用原图、原表或清晰截图。用户明确指定的其他样式优先，修改既有文件时保留原有样式。正文与逐字稿分工清晰，生成后按实际改动核对页面排版或备注后交付。技能本身不含 hooks、运行脚本或固定 MCP 依赖，实际 PPT 编辑与渲染使用当前环境已有工具。
 
 ```bash
 npx skills add Starxy/skills --skill ppt-craft --agent codex
