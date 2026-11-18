@@ -1,12 +1,11 @@
 # Starxy Skills
 
-用于论文阅读与翻译、长内容整理、科研写作、PPT 与逐字稿制作、AI 新闻策展和 Zotero 文献管理的 Agent Skills 合集。每个技能以 `SKILL.md` 保存执行说明，并按需附带脚本、参考文档和资源，可通过 [Skills CLI](https://github.com/vercel-labs/skills) 安装。
+用于论文阅读与翻译、长内容整理、PPT 与逐字稿制作、AI 新闻策展和 Zotero 文献管理的 Agent Skills 合集。每个技能以 `SKILL.md` 保存执行说明，并按需附带脚本、参考文档和资源，可通过 [Skills CLI](https://github.com/vercel-labs/skills) 安装。
 
 ## 技能目录
 
 | 技能 | 用途 |
 | --- | --- |
-| [anti-defensive-writing](skills/anti-defensive-writing/SKILL.md) | 起草或修改论文、研究方案、实验报告与阶段汇报，减少防御性表达，按研究阶段组织内容。 |
 | [asr-polish](skills/asr-polish/SKILL.md) | 将中文、英文及混合语言的长篇 ASR 转写整理为完整阅读稿；明确声明全英文并要求译稿时，另附中文翻译。 |
 | [paper-pass](skills/paper-pass/SKILL.md) | 分三阶段初读单篇论文，提取逐节核心观点，重构研究思路，说明贡献与局限。 |
 | [paper-translate](skills/paper-translate/SKILL.md) | 将 SingleFile HTML、arXiv TeX 或 PDF 翻译为中文，尽量保留原版式，按需提供双语对照。 |
@@ -40,7 +39,7 @@ npx skills add Starxy/skills --list
 
 ## 使用
 
-`anti-defensive-writing` 允许隐式调用，智能体可在任务符合其描述时选择使用；其他技能（包括仓库维护技能）仍配置为仅由用户显式调用。所有技能都支持显式调用：在 Codex 的请求中写明 `$技能名`，例如：
+仓库中的技能均配置为仅由用户显式调用。在 Codex 请求中写明 `$技能名` 即可调用。
 
 ```text
 $paper-pass 阅读这篇论文，说明逐节核心观点、研究思路和贡献边界：<论文链接>
