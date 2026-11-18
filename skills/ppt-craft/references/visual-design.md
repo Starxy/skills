@@ -45,6 +45,9 @@
 
 - **使用专业的数学公式（LaTeX 形式）**：独立公式与正文、表格中的行内数学符号均采用专业的数学公式排版（以标准 LaTeX 数学语法编写，生成演示文稿原生可编辑公式对象或高分辨率 LaTeX 数学渲染）。规范呈现上下标、分式、根号、括号、算子与斜体变量（例如写作 $d_{\text{model}}$、$h_{t-1}$、$\mathcal{O}(n^2 \cdot d)$、$\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right)V$），**不在页面上直接输出 `d_model`、`h_(t-1)`、`10000^(2i/d_model)` 等纯文本近似符号**。
 - **符号说明与可编辑性**：关键公式在同页或紧邻位置给出符号含义、单位与约束条件；长公式按推理步骤拆分展示。除原论文图、生成插画或复杂公式渲染图外，页面标题、正文、分组框、表格、新增标注和原生数据图表尽量保持独立可编辑。
+- **跨软件（Microsoft Office PowerPoint 与 WPS）OOXML 元素顺序兼容**：通过代码或 XML 操作生成 `.pptx` 时，必须严格遵守 OpenXML（`dml-main.xsd`）的子元素顺序要求——Microsoft PowerPoint 采用严格的顺序解析器，顺序错误的元素会被直接丢弃并回退为默认黑色边框或默认项目符号（WPS 则不校验顺序）：
+  - **表格单元格 `<a:tcPr>`**：边框节点 `<a:lnL>`、`<a:lnR>`、`<a:lnT>`、`<a:lnB>` **必须排在填充节点 `<a:solidFill>` 之前**（若先调 `cell.fill.solid()` 再 `append` 边框，Office PowerPoint 会忽略自定义边框颜色并回退为黑色粗框）。
+  - **段落属性 `<a:pPr>` 与 `<a:lstStyle>`**：行距 `<a:lnSpc>`、段距 `<a:spcBef>`/`<a:spcAft>` 和无项目符号 `<a:buNone/>` **必须插入在 `<a:defRPr>` 之前**（若 `append` 在 `<a:defRPr>` 之后，Office PowerPoint 会忽略 `<a:buNone/>`，导致占位符标题前多出圆点符号 `•`）。
 
 ## 检查实际版面
 
